@@ -2,25 +2,22 @@ package main
 
 import (
 	"fmt"
-	"os"
 
+	migrations "github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/Migrations"
+	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/customValidators"
+	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/environment"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/routes"
-	"github.com/joho/godotenv"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
-	//PORT .env
-	var port string
-	err := godotenv.Load(".env")
-	if err != nil {
-		port = ":3000"
-	} else {
-		port = os.Getenv("PORT")
-	}
+	migrations.MakeAllMigrations()
+	port := environment.GetApplicationPort()
 
 	e := echo.New()
+	e.Validator = customValidators.NewCustomValidator()
 
 	//CURL
 
@@ -29,8 +26,7 @@ func main() {
 	e.Use(middleware.Logger())
 
 	//Routes
-	testRoute := e.Group("/test")
-	routes.TestRouter(testRoute)
+	routes.HanddlerRoutes(e)
 
 	//Starting App
 	fmt.Printf("Server runnin on port http://localhost%s", port)
