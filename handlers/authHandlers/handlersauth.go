@@ -1,9 +1,10 @@
-package handlers
+package authhandlers
 
 import (
 	"net/http"
 
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/database"
+	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/handlers"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/environment"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/roles"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/models"
@@ -16,11 +17,11 @@ func Login(c echo.Context) error {
 	data := models.Login{}
 	err := c.Bind(&data)
 	if err != nil {
-		response := newResponse("ERROR", "Not valid body information", nil)
+		response := handlers.NewResponse("ERROR", "Not valid body information", nil)
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
-	response := newResponse("OK", "User successfully logged", data)
+	response := handlers.NewResponse("OK", "User successfully logged", data)
 	return c.JSON(http.StatusOK, response)
 }
 
@@ -28,17 +29,17 @@ func Register(c echo.Context) error {
 	data := models.Register{}
 
 	if err := c.Bind(&data); err != nil {
-		response := newResponse("ERROR", "Not valid body information", nil)
+		response := handlers.NewResponse("ERROR", "Not valid body information", nil)
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
 	if err := c.Validate(&data); err != nil {
-		response := newResponse("ERROR", "All fields are required", nil)
+		response := handlers.NewResponse("ERROR", "All fields are required", nil)
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
 	if data.Password != data.ConfirmPassword {
-		response := newResponse("ERROR", "Passwords are not equals", nil)
+		response := handlers.NewResponse("ERROR", "Passwords are not equals", nil)
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
@@ -47,14 +48,14 @@ func Register(c echo.Context) error {
 	//Check email is not taken
 	result := database.DataBase.Where("email = ?", data.Email).First(&newUser)
 	if result.RowsAffected > 0 {
-		response := newResponse("ERROR", "Email already taken", nil)
+		response := handlers.NewResponse("ERROR", "Email already taken", nil)
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
 	//Hashing ths password
 	hashedPass, err := bcrypt.GenerateFromPassword([]byte(data.Password), bcrypt.DefaultCost)
 	if err != nil {
-		response := newResponse("ERROR", "Error hashing the password", nil)
+		response := handlers.NewResponse("ERROR", "Error hashing the password", nil)
 		return c.JSON(http.StatusInternalServerError, response)
 	}
 
@@ -69,19 +70,19 @@ func Register(c echo.Context) error {
 
 	//Create token
 	claims := models.JwtCustomClaims{
-		Id:    int(newUser.Id),
+		Id:    int(newUser.ID),
 		Email: data.Email,
 		Role:  roles.USER,
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	t, err := token.SignedString([]byte(environment.GetJwtSecretKey()))
 	if err != nil {
-		response := newResponse("ERROR", "trouble creating a JWT", nil)
+		response := handlers.NewResponse("ERROR", "trouble creating a JWT", nil)
 		return c.JSON(http.StatusInternalServerError, response)
 	}
 
 	//Good response
 	tokenResponse := map[string]string{"token": t}
-	response := newResponse("OK", "User created", tokenResponse)
+	response := handlers.NewResponse("OK", "User created", tokenResponse)
 	return c.JSON(http.StatusOK, response)
 }
