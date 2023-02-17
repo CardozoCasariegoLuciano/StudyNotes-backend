@@ -14,7 +14,7 @@ func getDataBaseURI() string {
 
 	err := godotenv.Load(".env")
 	if err != nil {
-		db_password = "123Luciano456"
+		db_password = "123luciano456"
 		db_host = "localhost:3306"
 		db_name = "studyNotes"
 	} else {

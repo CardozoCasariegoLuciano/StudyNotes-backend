@@ -1,9 +1,8 @@
-package authhandlers
+package authHandlers
 
 import (
 	"net/http"
 
-	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/database"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/handlers"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/environment"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/roles"
@@ -13,7 +12,15 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func Login(c echo.Context) error {
+type Auth struct {
+	storage models.Istorage
+}
+
+func NewAuth(store models.Istorage) *Auth {
+	return &Auth{storage: store}
+}
+
+func (auth *Auth) Login(c echo.Context) error {
 	data := models.Login{}
 	err := c.Bind(&data)
 	if err != nil {
@@ -25,7 +32,7 @@ func Login(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
-func Register(c echo.Context) error {
+func (auth *Auth) Register(c echo.Context) error {
 	data := models.Register{}
 
 	if err := c.Bind(&data); err != nil {
@@ -46,7 +53,7 @@ func Register(c echo.Context) error {
 	var newUser models.User
 
 	//Check email is not taken
-	result := database.DataBase.Where("email = ?", data.Email).First(&newUser)
+	result := auth.storage.FindUserByEmail(data.Email, &newUser)
 	if result.RowsAffected > 0 {
 		response := handlers.NewResponse("ERROR", "Email already taken", nil)
 		return c.JSON(http.StatusBadRequest, response)
@@ -66,7 +73,7 @@ func Register(c echo.Context) error {
 		Email:    data.Email,
 		Role:     roles.USER,
 	}
-	database.DataBase.Save(&newUser)
+	auth.storage.CreateUser(&newUser)
 
 	//Create token
 	claims := models.JwtCustomClaims{
