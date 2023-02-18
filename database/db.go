@@ -10,7 +10,6 @@ import (
 
 var dataBaseURI = getDataBaseURI()
 
-// TODO ver lo del beforeeahc para los tests
 func NewDataBase() (db *gorm.DB) {
 	env := environment.GetEnvirontment()
 	if env != "test" {

@@ -50,20 +50,19 @@ func (auth *Auth) Register(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
-	var newUser models.User
-
-	//Check email is not taken
-	result := auth.storage.FindUserByEmail(data.Email, &newUser)
-	if result.RowsAffected > 0 {
-		response := handlers.NewResponse("ERROR", "Email already taken", nil)
-		return c.JSON(http.StatusBadRequest, response)
-	}
-
 	//Hashing ths password
 	hashedPass, err := bcrypt.GenerateFromPassword([]byte(data.Password), bcrypt.DefaultCost)
 	if err != nil {
 		response := handlers.NewResponse("ERROR", "Error hashing the password", nil)
 		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	var newUser models.User
+	//Check email is not taken
+	result := auth.storage.FindUserByEmail(data.Email, &newUser)
+	if result.RowsAffected > 0 {
+		response := handlers.NewResponse("ERROR", "Email already taken", nil)
+		return c.JSON(http.StatusBadRequest, response)
 	}
 
 	//Saving the new user
