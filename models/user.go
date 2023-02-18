@@ -1,7 +1,6 @@
 package models
 
 import (
-	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/database"
 	"gorm.io/gorm"
 )
 
@@ -17,6 +16,6 @@ type User struct {
 
 type Users []User
 
-func UsersMigration() {
-	database.DataBase.AutoMigrate(User{})
+func UsersMigration(database *gorm.DB) {
+	database.AutoMigrate(User{})
 }
