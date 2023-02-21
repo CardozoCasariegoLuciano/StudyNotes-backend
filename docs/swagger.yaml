@@ -1,5 +1,15 @@
 basePath: /api/v1
 definitions:
+  models.Login:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
   models.Register:
     properties:
       confirmPassword:
@@ -32,6 +42,47 @@ info:
   title: StudyNotes API docTemplate
   version: "1.0"
 paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Login a user and get his token
+      parameters:
+      - description: request body
+        in: body
+        name: Register
+        required: true
+        schema:
+          $ref: '#/definitions/models.Login'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/swaggertypes.SwaggerCustomTypes'
+                  - properties:
+                      token:
+                        type: string
+                    type: object
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      summary: Login a user
+      tags:
+      - Auth
   /auth/register:
     post:
       consumes:

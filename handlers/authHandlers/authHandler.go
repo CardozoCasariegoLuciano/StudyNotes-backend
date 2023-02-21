@@ -21,15 +21,66 @@ func NewAuth(store models.Istorage) *Auth {
 	return &Auth{storage: store}
 }
 
+// Login godoc
+// @Summary Login a user
+// @Description Login a user and get his token
+// @Tags Auth
+// @Accept json
+// @Param Register body models.Login true "request body"
+// @Produce json
+// @Success 200 {object} responses.Response{data=swaggertypes.SwaggerCustomTypes{token=string}}
+// @Failure 400 {object} responses.Response{data=object}
+// @Router /auth/login [post]
 func (auth *Auth) Login(c echo.Context) error {
 	data := models.Login{}
-	err := c.Bind(&data)
-	if err != nil {
+
+	if err := c.Bind(&data); err != nil {
 		response := responses.NewResponse("ERROR", "Not valid body information", nil)
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
-	response := responses.NewResponse("OK", "User successfully logged", data)
+	if err := c.Validate(&data); err != nil {
+		if strings.Contains(err.Error(), "'email' tag") {
+			response := responses.NewResponse("ERROR", "email field must be a valid email", nil)
+			return c.JSON(http.StatusBadRequest, response)
+		} else {
+			response := responses.NewResponse("ERROR", "All fields are required", nil)
+			return c.JSON(http.StatusBadRequest, response)
+		}
+	}
+
+	var userLogged models.User
+	//Check email exist
+	result := auth.storage.FindUserByEmail(data.Email, &userLogged)
+	if result.RowsAffected == 0 {
+		response := responses.NewResponse("ERROR", "Wrong email or password", nil)
+		return c.JSON(http.StatusBadRequest, response)
+	}
+
+	//compare password
+	err := bcrypt.CompareHashAndPassword([]byte(userLogged.Password), []byte(data.Password))
+	if err != nil {
+		response := responses.NewResponse("ERROR", "Wrong email or password", nil)
+		return c.JSON(http.StatusBadRequest, response)
+	}
+
+	//Create token
+	claims := models.JwtCustomClaims{
+		Id:    int(userLogged.ID),
+		Email: userLogged.Email,
+		Role:  userLogged.Role,
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	t, err := token.SignedString([]byte(environment.GetJwtSecretKey()))
+	if err != nil {
+		response := responses.NewResponse("ERROR", "trouble creating a JWT", nil)
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	//Good response
+	tokenResponse := map[string]string{"token": t}
+	response := responses.NewResponse("OK", "User created", tokenResponse)
+
 	return c.JSON(http.StatusOK, response)
 }
 
