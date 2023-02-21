@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/handlers"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/handlers/authHandlers"
 	mock_models "github.com/CardozoCasariegoLuciano/StudyNotes-backend/handlers/mocks"
+	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/handlers/responses"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/customValidators"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/environment"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/models"
@@ -28,7 +28,7 @@ func TestRegister_badCases(t *testing.T) {
 		path            string
 		body            interface{}
 		expectedCode    int
-		expectedResonse handlers.Response
+		expectedResonse responses.Response
 	}{
 		{
 			name: "wrong data type",
@@ -40,7 +40,7 @@ func TestRegister_badCases(t *testing.T) {
 				"confirmPassword": "testpassword",
 			},
 			expectedCode: http.StatusBadRequest,
-			expectedResonse: handlers.Response{
+			expectedResonse: responses.Response{
 				MessageType: "ERROR",
 				Message:     "Not valid body information",
 				Data:        nil,
@@ -54,9 +54,25 @@ func TestRegister_badCases(t *testing.T) {
 				"confirmPassword": "testpassword",
 			},
 			expectedCode: http.StatusBadRequest,
-			expectedResonse: handlers.Response{
+			expectedResonse: responses.Response{
 				MessageType: "ERROR",
 				Message:     "All fields are required",
+				Data:        nil,
+			},
+		},
+		{
+			name: "No valid email",
+			path: "/auth/register",
+			body: map[string]interface{}{
+				"name":            "test",
+				"email":           "novalidEmail",
+				"password":        "testpassword",
+				"confirmPassword": "testpassword",
+			},
+			expectedCode: http.StatusBadRequest,
+			expectedResonse: responses.Response{
+				MessageType: "ERROR",
+				Message:     "email field must be a valid email",
 				Data:        nil,
 			},
 		},
@@ -70,7 +86,7 @@ func TestRegister_badCases(t *testing.T) {
 				"confirmPassword": "Fake2",
 			},
 			expectedCode: http.StatusBadRequest,
-			expectedResonse: handlers.Response{
+			expectedResonse: responses.Response{
 				MessageType: "ERROR",
 				Message:     "Passwords are not equals",
 				Data:        nil,
@@ -86,7 +102,7 @@ func TestRegister_badCases(t *testing.T) {
 				"confirmPassword": "testpassword",
 			},
 			expectedCode: http.StatusBadRequest,
-			expectedResonse: handlers.Response{
+			expectedResonse: responses.Response{
 				MessageType: "ERROR",
 				Message:     "Email already taken",
 				Data:        nil,
@@ -138,7 +154,7 @@ func TestRegister_badCases(t *testing.T) {
 
 			//Parse the []bytes of the response
 			// and fill the result into resp variable
-			resp := handlers.Response{}
+			resp := responses.Response{}
 			err = json.Unmarshal(writer.Body.Bytes(), &resp)
 			assert.NoError(t, err)
 
@@ -158,7 +174,7 @@ func TestRegister_GoodCases(t *testing.T) {
 		path            string
 		body            interface{}
 		expectedCode    int
-		expectedResonse handlers.Response
+		expectedResonse responses.Response
 	}{
 		{
 			name: "User successfully created",
@@ -170,10 +186,9 @@ func TestRegister_GoodCases(t *testing.T) {
 				"confirmPassword": "pass1",
 			},
 			expectedCode: http.StatusOK,
-			expectedResonse: handlers.Response{
+			expectedResonse: responses.Response{
 				MessageType: "OK",
 				Message:     "User created",
-				Data:        nil,
 			},
 		},
 	}
@@ -222,7 +237,7 @@ func TestRegister_GoodCases(t *testing.T) {
 
 			// Parse the []bytes of the response
 			// and fill the result into resp variable
-			resp := handlers.Response{}
+			resp := responses.Response{}
 			err = json.Unmarshal(writer.Body.Bytes(), &resp)
 			assert.NoError(t, err)
 

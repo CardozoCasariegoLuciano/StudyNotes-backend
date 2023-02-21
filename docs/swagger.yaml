@@ -1,0 +1,76 @@
+basePath: /api/v1
+definitions:
+  models.Register:
+    properties:
+      confirmPassword:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    required:
+    - confirmPassword
+    - email
+    - name
+    - password
+    type: object
+  responses.Response:
+    properties:
+      data:
+        x-nullable: true
+      message:
+        type: string
+      message_type:
+        type: string
+    type: object
+  swaggertypes.SwaggerCustomTypes:
+    type: object
+info:
+  contact: {}
+  title: StudyNotes API docTemplate
+  version: "1.0"
+paths:
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Charge new user into the database
+      parameters:
+      - description: request body
+        in: body
+        name: Register
+        required: true
+        schema:
+          $ref: '#/definitions/models.Register'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/swaggertypes.SwaggerCustomTypes'
+                  - properties:
+                      token:
+                        type: string
+                    type: object
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      summary: Register new user
+      tags:
+      - Auth
+swagger: "2.0"
