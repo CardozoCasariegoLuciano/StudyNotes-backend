@@ -2,25 +2,29 @@ package main
 
 import (
 	"fmt"
-	"os"
 
+	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/database"
+	migrations "github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/Migrations"
+	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/customValidators"
+	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/environment"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/routes"
-	"github.com/joho/godotenv"
+
+	_ "github.com/CardozoCasariegoLuciano/StudyNotes-backend/docs"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
+// @title			StudyNotes API docTemplate
+// @version		1.0
+// @BasePath	/api/v1
 func main() {
-	//PORT .env
-	var port string
-	err := godotenv.Load(".env")
-	if err != nil {
-		port = ":3000"
-	} else {
-		port = os.Getenv("PORT")
-	}
+	database := database.NewDataBase()
+	migrations.MakeAllMigrations(database)
+	port := environment.GetApplicationPort()
 
 	e := echo.New()
+	e.Validator = customValidators.NewCustomValidator()
 
 	//CURL
 
@@ -28,9 +32,11 @@ func main() {
 	e.Use(middleware.Recover())
 	e.Use(middleware.Logger())
 
+	//Swager
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
+
 	//Routes
-	testRoute := e.Group("/test")
-	routes.TestRouter(testRoute)
+	routes.HanddlerRoutes(e, database)
 
 	//Starting App
 	fmt.Printf("Server runnin on port http://localhost%s", port)
