@@ -58,7 +58,7 @@ func (auth *Auth) Login(c echo.Context) error {
 	}
 
 	//compare password
-	err := bcrypt.CompareHashAndPassword([]byte(userLogged.Password), []byte(data.Password))
+	err := auth.storage.ComparePasswords(userLogged.Password, data.Password)
 	if err != nil {
 		response := responses.NewResponse("ERROR", "Wrong email or password", nil)
 		return c.JSON(http.StatusBadRequest, response)
@@ -79,7 +79,7 @@ func (auth *Auth) Login(c echo.Context) error {
 
 	//Good response
 	tokenResponse := map[string]string{"token": t}
-	response := responses.NewResponse("OK", "User created", tokenResponse)
+	response := responses.NewResponse("OK", "User Logged", tokenResponse)
 
 	return c.JSON(http.StatusOK, response)
 }

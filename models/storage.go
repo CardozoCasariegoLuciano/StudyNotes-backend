@@ -14,4 +14,5 @@ para mockearla y asi no romper los test viejos y poder testeaar nos nuevos cambi
 type Istorage interface {
 	CreateUser(user *User) *gorm.DB
 	FindUserByEmail(email string, model *User) *gorm.DB
+	ComparePasswords(hashedPass string, bodyPass string) error
 }
