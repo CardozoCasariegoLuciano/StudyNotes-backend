@@ -35,6 +35,20 @@ func (m *MockIstorage) EXPECT() *MockIstorageMockRecorder {
 	return m.recorder
 }
 
+// ComparePasswords mocks base method.
+func (m *MockIstorage) ComparePasswords(hashedPass, bodyPass string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ComparePasswords", hashedPass, bodyPass)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ComparePasswords indicates an expected call of ComparePasswords.
+func (mr *MockIstorageMockRecorder) ComparePasswords(hashedPass, bodyPass interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ComparePasswords", reflect.TypeOf((*MockIstorage)(nil).ComparePasswords), hashedPass, bodyPass)
+}
+
 // CreateUser mocks base method.
 func (m *MockIstorage) CreateUser(user *models.User) *gorm.DB {
 	m.ctrl.T.Helper()
