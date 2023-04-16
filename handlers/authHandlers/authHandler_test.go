@@ -479,6 +479,8 @@ func TestLogin_GoodCases(t *testing.T) {
 			assert.Equal(t, tc.expectedResonse.MessageType, resp.MessageType)
 			assert.Equal(t, tc.expectedResonse.Message, resp.Message)
 			assert.NotNil(t, resp.Data.(map[string]interface{})["token"])
+			assert.NotNil(t, resp.Data.(map[string]interface{})["email"])
+			assert.NotNil(t, resp.Data.(map[string]interface{})["userName"])
 		})
 	}
 }

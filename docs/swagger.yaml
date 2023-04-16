@@ -67,7 +67,11 @@ paths:
                   allOf:
                   - $ref: '#/definitions/swaggertypes.SwaggerCustomTypes'
                   - properties:
+                      email:
+                        type: string
                       token:
+                        type: string
+                      userName:
                         type: string
                     type: object
               type: object

@@ -26,7 +26,8 @@ func main() {
 	e := echo.New()
 	e.Validator = customValidators.NewCustomValidator()
 
-	//CURL
+	//CORS
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{}))
 
 	//Middleware
 	e.Use(middleware.Recover())

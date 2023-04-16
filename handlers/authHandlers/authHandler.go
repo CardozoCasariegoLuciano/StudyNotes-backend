@@ -28,7 +28,7 @@ func NewAuth(store models.Istorage) *Auth {
 // @Accept json
 // @Param Register body models.Login true "request body"
 // @Produce json
-// @Success 200 {object} responses.Response{data=swaggertypes.SwaggerCustomTypes{token=string}}
+// @Success 200 {object} responses.Response{data=swaggertypes.SwaggerCustomTypes{token=string,userName=string,email=string}}
 // @Failure 400 {object} responses.Response{data=object}
 // @Router /auth/login [post]
 func (auth *Auth) Login(c echo.Context) error {
@@ -78,8 +78,12 @@ func (auth *Auth) Login(c echo.Context) error {
 	}
 
 	//Good response
-	tokenResponse := map[string]string{"token": t}
-	response := responses.NewResponse("OK", "User Logged", tokenResponse)
+	finalResponse := map[string]string{
+		"token":    t,
+		"userName": userLogged.Name,
+		"email":    userLogged.Email,
+	}
+	response := responses.NewResponse("OK", "User Logged", finalResponse)
 
 	return c.JSON(http.StatusOK, response)
 }
