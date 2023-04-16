@@ -58,7 +58,13 @@ const docTemplate = `{
                                                 {
                                                     "type": "object",
                                                     "properties": {
+                                                        "email": {
+                                                            "type": "string"
+                                                        },
                                                         "token": {
+                                                            "type": "string"
+                                                        },
+                                                        "userName": {
                                                             "type": "string"
                                                         }
                                                     }
