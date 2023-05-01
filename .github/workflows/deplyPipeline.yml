@@ -24,8 +24,7 @@ jobs:
           go mod download
 
       - name: Build
-        run: |
-          go build -v ./...
+        run: go run main.go
 
       - name: Test
         run: |
