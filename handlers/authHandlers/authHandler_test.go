@@ -13,7 +13,7 @@ import (
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/handlers/responses"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/customValidators"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/environment"
-	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/models"
+	dbmodels "github.com/CardozoCasariegoLuciano/StudyNotes-backend/models/dbModels"
 	"github.com/golang/mock/gomock"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
@@ -32,18 +32,18 @@ func TestRegister_badCases(t *testing.T) {
 
 	mockUserRepo.
 		EXPECT().
-		CreateUser(gomock.AssignableToTypeOf(&models.User{})).
+		Create(gomock.AssignableToTypeOf(&dbmodels.User{})).
 		Return(nil).
 		AnyTimes()
 
 	mockUserRepo.
 		EXPECT().
-		FindUserByEmail(gomock.Eq("mailtaken@example.com"), gomock.AssignableToTypeOf(&models.User{})).
+		FindUserByEmail(gomock.Eq("mailtaken@example.com"), gomock.AssignableToTypeOf(&dbmodels.User{})).
 		Return(&gorm.DB{RowsAffected: 1}).AnyTimes()
 
 	mockUserRepo.
 		EXPECT().
-		FindUserByEmail(gomock.AssignableToTypeOf(""), gomock.AssignableToTypeOf(&models.User{})).
+		FindUserByEmail(gomock.AssignableToTypeOf(""), gomock.AssignableToTypeOf(&dbmodels.User{})).
 		Return(&gorm.DB{RowsAffected: 0}).AnyTimes()
 
 	environment.SetTestEnvirontment()
@@ -185,13 +185,13 @@ func TestRegister_GoodCases(t *testing.T) {
 
 	mockUserRepo.
 		EXPECT().
-		CreateUser(gomock.AssignableToTypeOf(&models.User{})).
+		Create(gomock.AssignableToTypeOf(&dbmodels.User{})).
 		Return(nil).
 		AnyTimes()
 
 	mockUserRepo.
 		EXPECT().
-		FindUserByEmail(gomock.AssignableToTypeOf(""), gomock.AssignableToTypeOf(&models.User{})).
+		FindUserByEmail(gomock.AssignableToTypeOf(""), gomock.AssignableToTypeOf(&dbmodels.User{})).
 		Return(&gorm.DB{RowsAffected: 0}).AnyTimes()
 
 	testCases := []struct {
@@ -270,12 +270,12 @@ func TestLogin_badCases(t *testing.T) {
 
 	mockUserRepo.
 		EXPECT().
-		FindUserByEmail(gomock.Eq("noExist@email.com"), gomock.AssignableToTypeOf(&models.User{})).
+		FindUserByEmail(gomock.Eq("noExist@email.com"), gomock.AssignableToTypeOf(&dbmodels.User{})).
 		Return(&gorm.DB{RowsAffected: 0}).AnyTimes()
 
 	mockUserRepo.
 		EXPECT().
-		FindUserByEmail(gomock.AssignableToTypeOf(""), gomock.AssignableToTypeOf(&models.User{})).
+		FindUserByEmail(gomock.AssignableToTypeOf(""), gomock.AssignableToTypeOf(&dbmodels.User{})).
 		Return(&gorm.DB{RowsAffected: 1}).AnyTimes()
 
 	mockUserRepo.
@@ -413,7 +413,7 @@ func TestLogin_GoodCases(t *testing.T) {
 
 	mockUserRepo.
 		EXPECT().
-		FindUserByEmail(gomock.AssignableToTypeOf(""), gomock.AssignableToTypeOf(&models.User{})).
+		FindUserByEmail(gomock.AssignableToTypeOf(""), gomock.AssignableToTypeOf(&dbmodels.User{})).
 		Return(&gorm.DB{RowsAffected: 1}).AnyTimes()
 
 	mockUserRepo.

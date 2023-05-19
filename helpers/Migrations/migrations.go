@@ -1,10 +1,11 @@
 package migrations
 
 import (
-	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/models"
+	dbmodels "github.com/CardozoCasariegoLuciano/StudyNotes-backend/models/dbModels"
 	"gorm.io/gorm"
 )
 
 func MakeAllMigrations(database *gorm.DB) {
-	models.UsersMigration(database)
+	dbmodels.UsersMigration(database)
+	dbmodels.NotesMigration(database)
 }

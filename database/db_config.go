@@ -23,6 +23,6 @@ func getDataBaseURI() string {
 		db_name = os.Getenv("DB_NAME")
 	}
 
-	URI := fmt.Sprintf("root:%s@tcp(%s)/%s", db_password, db_host, db_name)
+	URI := fmt.Sprintf("root:%s@tcp(%s)/%s?parseTime=true", db_password, db_host, db_name)
 	return URI
 }

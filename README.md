@@ -61,7 +61,7 @@ Para correr todos los test: `go test -v ./...`
 
 ###### Actualizar los mocks:
 - Cuando se modifique la interfaz Istorage IMPORTANTE actualizar los mocks con:<br/>
-`mockgen -source=models/storage.go -destination=./handlers/mocks/IStorageMocks.go`
+`mockgen -source=models/apiModels/storage.go -destination=./handlers/mocks/IStorageMocks.go`
 tanto para tenerlos al momento de hacer los test como para que no se rompan los que ya estan
 
 
