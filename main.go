@@ -31,7 +31,7 @@ func main() {
 
 	//Middleware
 	e.Use(middleware.Recover())
-	e.Use(middleware.Logger())
+	//e.Use(middleware.Logger())
 
 	//Swager
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
