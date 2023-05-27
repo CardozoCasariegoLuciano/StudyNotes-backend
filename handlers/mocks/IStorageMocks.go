@@ -49,18 +49,18 @@ func (mr *MockIstorageMockRecorder) ComparePasswords(hashedPass, bodyPass interf
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ComparePasswords", reflect.TypeOf((*MockIstorage)(nil).ComparePasswords), hashedPass, bodyPass)
 }
 
-// Create mocks base method.
-func (m *MockIstorage) Create(anyModel interface{}) *gorm.DB {
+// DeleteNoteByID mocks base method.
+func (m *MockIstorage) DeleteNoteByID(noteID int, model *dbmodels.Note) *gorm.DB {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Create", anyModel)
+	ret := m.ctrl.Call(m, "DeleteNoteByID", noteID, model)
 	ret0, _ := ret[0].(*gorm.DB)
 	return ret0
 }
 
-// Create indicates an expected call of Create.
-func (mr *MockIstorageMockRecorder) Create(anyModel interface{}) *gomock.Call {
+// DeleteNoteByID indicates an expected call of DeleteNoteByID.
+func (mr *MockIstorageMockRecorder) DeleteNoteByID(noteID, model interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockIstorage)(nil).Create), anyModel)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteNoteByID", reflect.TypeOf((*MockIstorage)(nil).DeleteNoteByID), noteID, model)
 }
 
 // FindUserByEmail mocks base method.
@@ -89,4 +89,32 @@ func (m *MockIstorage) GetAllNotes(userID int, model *dbmodels.Notes) *gorm.DB {
 func (mr *MockIstorageMockRecorder) GetAllNotes(userID, model interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllNotes", reflect.TypeOf((*MockIstorage)(nil).GetAllNotes), userID, model)
+}
+
+// GetNoteByID mocks base method.
+func (m *MockIstorage) GetNoteByID(noteID int, model *dbmodels.Note) *gorm.DB {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetNoteByID", noteID, model)
+	ret0, _ := ret[0].(*gorm.DB)
+	return ret0
+}
+
+// GetNoteByID indicates an expected call of GetNoteByID.
+func (mr *MockIstorageMockRecorder) GetNoteByID(noteID, model interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNoteByID", reflect.TypeOf((*MockIstorage)(nil).GetNoteByID), noteID, model)
+}
+
+// Save mocks base method.
+func (m *MockIstorage) Save(anyModel interface{}) *gorm.DB {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Save", anyModel)
+	ret0, _ := ret[0].(*gorm.DB)
+	return ret0
+}
+
+// Save indicates an expected call of Save.
+func (mr *MockIstorageMockRecorder) Save(anyModel interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Save", reflect.TypeOf((*MockIstorage)(nil).Save), anyModel)
 }

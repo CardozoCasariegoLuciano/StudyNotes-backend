@@ -13,4 +13,5 @@ func NotesRoutes(noteGroup *echo.Group, storage *storage.Storage) {
 	noteGroup.POST("/", notes.CreateNote)
 	noteGroup.GET("/:noteId", notes.GetNoteByID, notes.GetNoteByQueryID)
 	noteGroup.DELETE("/:noteId", notes.DeleteNoteByID, notes.GetNoteByQueryID)
+	noteGroup.PUT("/:noteId", notes.UpdateNoteByID, notes.GetNoteByQueryID)
 }

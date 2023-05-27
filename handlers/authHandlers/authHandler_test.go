@@ -32,7 +32,7 @@ func TestRegister_badCases(t *testing.T) {
 
 	mockUserRepo.
 		EXPECT().
-		Create(gomock.AssignableToTypeOf(&dbmodels.User{})).
+		Save(gomock.AssignableToTypeOf(&dbmodels.User{})).
 		Return(nil).
 		AnyTimes()
 
@@ -185,7 +185,7 @@ func TestRegister_GoodCases(t *testing.T) {
 
 	mockUserRepo.
 		EXPECT().
-		Create(gomock.AssignableToTypeOf(&dbmodels.User{})).
+		Save(gomock.AssignableToTypeOf(&dbmodels.User{})).
 		Return(nil).
 		AnyTimes()
 

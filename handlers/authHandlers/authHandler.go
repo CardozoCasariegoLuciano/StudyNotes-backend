@@ -144,7 +144,7 @@ func (auth *Auth) Register(c echo.Context) error {
 		Email:    data.Email,
 		Role:     roles.USER,
 	}
-	auth.storage.Create(&newUser)
+	auth.storage.Save(&newUser)
 
 	//Create token
 	claims := apimodels.JwtCustomClaims{

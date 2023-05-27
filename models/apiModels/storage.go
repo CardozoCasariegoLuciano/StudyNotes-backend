@@ -15,7 +15,7 @@ para mockearla y asi no romper los test viejos y poder testeaar nos nuevos cambi
 */
 
 type Istorage interface {
-	Create(anyModel interface{}) *gorm.DB
+	Save(anyModel interface{}) *gorm.DB
 	FindUserByEmail(email string, model *dbmodels.User) *gorm.DB
 	ComparePasswords(hashedPass string, bodyPass string) error
 	GetAllNotes(userID int, model *dbmodels.Notes) *gorm.DB
