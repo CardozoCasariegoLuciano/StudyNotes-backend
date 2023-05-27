@@ -14,7 +14,7 @@ type Note struct {
 	storage apimodels.Istorage
 }
 
-func NewAuth(store apimodels.Istorage) *Note {
+func NewNote(store apimodels.Istorage) *Note {
 	return &Note{storage: store}
 }
 

@@ -7,7 +7,7 @@ import (
 )
 
 func NotesRoutes(noteGroup *echo.Group, storage *storage.Storage) {
-	notes := noteshandlers.NewAuth(storage)
+	notes := noteshandlers.NewNote(storage)
 
 	noteGroup.GET("/", notes.GetUserNotes)
 	noteGroup.POST("/", notes.CreateNote)
