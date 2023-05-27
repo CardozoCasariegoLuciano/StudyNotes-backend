@@ -7,7 +7,7 @@ import (
 type Note struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
-	UserID      uint   `json:"userID" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	UserID      uint   `json:"userID" gorm:"column:author; constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	gorm.Model
 }
 

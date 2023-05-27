@@ -19,4 +19,6 @@ type Istorage interface {
 	FindUserByEmail(email string, model *dbmodels.User) *gorm.DB
 	ComparePasswords(hashedPass string, bodyPass string) error
 	GetAllNotes(userID int, model *dbmodels.Notes) *gorm.DB
+	GetNoteByID(noteID int, model *dbmodels.Note) *gorm.DB
+	DeleteNoteByID(noteID int, model *dbmodels.Note) *gorm.DB
 }

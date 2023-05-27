@@ -18,6 +18,16 @@ func NewAuth(store apimodels.Istorage) *Note {
 	return &Note{storage: store}
 }
 
+//TODO hacer y testear los que faltan para el CRUD (UPDATE)
+//TODO Documentar todo esto
+
+//TODO en el front, separar los componentes en otra libreria como zeta
+//TODO cambiar el pluggin de vim de las tabs
+//TODO Actualizar el Jira, el Docs y el Figma con el nuevo aprouch del proyecto
+//TODO Crear un script para Actualizar los mocks y el swager mas facilmente
+//TODO Actualizar el readme con el uso de esos scrips e indicando como conectar a la base de datos
+//TODO Crear codigos de ERROR para reemplazar en los endpoints
+
 func (note *Note) GetUserNotes(c echo.Context) error {
 	userID := c.Get("userID")
 	AllNotes := &dbmodels.Notes{}
@@ -62,4 +72,18 @@ func (note *Note) CreateNote(c echo.Context) error {
 
 	response := responses.NewResponse("OK", "Note created", newNote)
 	return c.JSON(http.StatusCreated, response)
+}
+
+func (note *Note) GetNoteByID(c echo.Context) error {
+	Note := c.Get("Note")
+	response := responses.NewResponse("OK", "Note Selected", Note)
+	return c.JSON(http.StatusOK, response)
+}
+
+func (note *Note) DeleteNoteByID(c echo.Context) error {
+	contextNote := c.Get("Note").(*dbmodels.Note)
+	note.storage.DeleteNoteByID(int(contextNote.ID), contextNote)
+
+	response := responses.NewResponse("OK", "Note Deleted", contextNote)
+	return c.JSON(http.StatusOK, response)
 }
