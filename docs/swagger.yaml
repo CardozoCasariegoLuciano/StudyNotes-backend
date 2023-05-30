@@ -1,6 +1,6 @@
 basePath: /api/v1
 definitions:
-  models.Login:
+  apimodels.Login:
     properties:
       email:
         type: string
@@ -10,7 +10,7 @@ definitions:
     - email
     - password
     type: object
-  models.Register:
+  apimodels.Register:
     properties:
       confirmPassword:
         type: string
@@ -53,7 +53,7 @@ paths:
         name: Register
         required: true
         schema:
-          $ref: '#/definitions/models.Login'
+          $ref: '#/definitions/apimodels.Login'
       produces:
       - application/json
       responses:
@@ -98,7 +98,7 @@ paths:
         name: Register
         required: true
         schema:
-          $ref: '#/definitions/models.Register'
+          $ref: '#/definitions/apimodels.Register'
       produces:
       - application/json
       responses:

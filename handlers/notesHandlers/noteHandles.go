@@ -22,7 +22,6 @@ func NewNote(store apimodels.Istorage) *Note {
 //TODO Documentar todo esto
 
 //TODO Actualizar el Jira, el Docs y el Figma con el nuevo aprouch del proyecto
-//TODO Crear un script para Actualizar los mocks y el swager mas facilmente
 //TODO Actualizar el readme con el uso de esos scrips e indicando como conectar a la base de datos
 
 //TODO en el front, separar los componentes en otra libreria como zeta

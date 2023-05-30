@@ -35,7 +35,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Login"
+                            "$ref": "#/definitions/apimodels.Login"
                         }
                     }
                 ],
@@ -117,7 +117,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/models.Register"
+                            "$ref": "#/definitions/apimodels.Register"
                         }
                     }
                 ],
@@ -175,7 +175,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "models.Login": {
+        "apimodels.Login": {
             "type": "object",
             "required": [
                 "email",
@@ -190,7 +190,7 @@ const docTemplate = `{
                 }
             }
         },
-        "models.Register": {
+        "apimodels.Register": {
             "type": "object",
             "required": [
                 "confirmPassword",

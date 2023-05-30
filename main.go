@@ -19,7 +19,7 @@ import (
 // @version		1.0
 // @BasePath	/api/v1
 func main() {
-	database := database.NewDataBase()
+	database := database.GetDataBase()
 	migrations.MakeAllMigrations(database)
 	port := environment.GetApplicationPort()
 

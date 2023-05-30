@@ -1,11 +1,26 @@
 package storage
 
-import "gorm.io/gorm"
+import (
+	"sync"
+
+	"gorm.io/gorm"
+)
 
 type Storage struct {
 	db *gorm.DB
 }
 
-func NewStorage(db *gorm.DB) *Storage {
+var stor *Storage
+var once sync.Once
+
+func GetStorage(db *gorm.DB) *Storage {
+	once.Do(func() {
+		stor = newStorage(db)
+	})
+
+	return stor
+}
+
+func newStorage(db *gorm.DB) *Storage {
 	return &Storage{db: db}
 }

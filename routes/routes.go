@@ -9,7 +9,7 @@ import (
 
 func HanddlerRoutes(e *echo.Echo, database *gorm.DB) {
 	basePath := "/api/v1"
-	st := storage.NewStorage(database)
+	st := storage.GetStorage(database)
 
 	//Auth
 	authRoutes := e.Group(basePath + "/auth")
