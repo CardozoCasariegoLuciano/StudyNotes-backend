@@ -13,11 +13,13 @@ import (
 )
 
 type InitTestConfig struct {
-	TokenUserID int
-	Path        string
-	Method      string
-	ReqBody     map[string]interface{}
-	ApplyToken  bool
+	TokenUserID    int
+	TokenUserRole  string
+	TokenUserEmail string
+	Path           string
+	Method         string
+	ReqBody        map[string]interface{}
+	ApplyToken     bool
 }
 
 type TestData struct {
@@ -28,7 +30,7 @@ type TestData struct {
 	CreatedToken string
 }
 
-// TODO: Aplicar este metodo al resto de tests <29-05-23, yourname> //
+// PARA MAS ADELANTE: ver si hace falta crear/modificar este para que acepte otros middlewares
 func SetGenericTestData(config *InitTestConfig) *TestData {
 	//Init objects
 	e := echo.New()
@@ -46,22 +48,28 @@ func SetGenericTestData(config *InitTestConfig) *TestData {
 		config.Path,
 		strings.NewReader(string(body)),
 	)
-	token := GenerateToken(config.TokenUserID)
 
 	request.Header.Set("Content-Type", "application/json")
-	if config.ApplyToken {
-		request.Header.Set("Authorization", token)
-	}
 
 	writer := httptest.NewRecorder()
 	context := e.NewContext(request, writer)
 
-	middlewareToken := midlewares.ValidateToken(func(c echo.Context) error {
-		return nil
-	})
-	err = middlewareToken(context)
-	if err != nil {
-		log.Println("Error al genererar el Token test: ", err)
+	var token string
+	if config.ApplyToken {
+		token = GenerateToken(
+			config.TokenUserID,
+			config.TokenUserRole,
+			config.TokenUserEmail,
+		)
+		request.Header.Set("Authorization", token)
+
+		middlewareToken := midlewares.ValidateToken(func(c echo.Context) error {
+			return nil
+		})
+		err = middlewareToken(context)
+		if err != nil {
+			log.Println("Error al genererar el Token test: ", err)
+		}
 	}
 
 	returnValues := &TestData{

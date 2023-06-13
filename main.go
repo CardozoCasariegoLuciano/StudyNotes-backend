@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 
-	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/database"
 	migrations "github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/Migrations"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/customValidators"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/environment"
@@ -19,8 +18,7 @@ import (
 // @version		1.0
 // @BasePath	/api/v1
 func main() {
-	database := database.GetDataBase()
-	migrations.MakeAllMigrations(database)
+	migrations.MakeAllMigrations()
 	port := environment.GetApplicationPort()
 
 	e := echo.New()
@@ -37,7 +35,7 @@ func main() {
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	//Routes
-	routes.HanddlerRoutes(e, database)
+	routes.HanddlerRoutes(e)
 
 	//Starting App
 	fmt.Printf("Server runnin on port http://localhost%s", port)

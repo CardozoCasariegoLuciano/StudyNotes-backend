@@ -16,9 +16,9 @@ para mockearla y asi no romper los test viejos y poder testeaar nos nuevos cambi
 
 type Istorage interface {
 	Save(anyModel interface{}) *gorm.DB
+	GetAll(model interface{}) *gorm.DB
+	GetById(id int, model interface{}) *gorm.DB
+	DeleteByID(id int, model interface{}) *gorm.DB
 	FindUserByEmail(email string, model *dbmodels.User) *gorm.DB
 	ComparePasswords(hashedPass string, bodyPass string) error
-	GetAllNotes(userID int, model *dbmodels.Notes) *gorm.DB
-	GetNoteByID(noteID int, model *dbmodels.Note) *gorm.DB
-	DeleteNoteByID(noteID int, model *dbmodels.Note) *gorm.DB
 }

@@ -6,14 +6,11 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
-func GenerateToken(userId int) string {
-	userID := userId
-	userEmail := "Email"
-	userRole := "User"
+func GenerateToken(uID int, uRole string, uEmail string) string {
 	claims := apimodels.JwtCustomClaims{
-		Id:    userID,
-		Email: userEmail,
-		Role:  userRole,
+		Id:    uID,
+		Email: uEmail,
+		Role:  uRole,
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	ValidToken, _ := token.SignedString([]byte(environment.GetJwtSecretKey()))

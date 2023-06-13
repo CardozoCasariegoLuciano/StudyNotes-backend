@@ -1,3 +1,5 @@
 #!/bin/bash
 
-mockgen -source=models/apiModels/storage.go -destination=./handlers/mocks/IStorageMocks.go
+mockgen -source=models/apiModels/storage.go -destination=./helpers/testTools/mocks/IStorageMocks.go
+
+

@@ -3,6 +3,7 @@ package storage
 import (
 	"sync"
 
+	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/database"
 	"gorm.io/gorm"
 )
 
@@ -13,14 +14,15 @@ type Storage struct {
 var stor *Storage
 var once sync.Once
 
-func GetStorage(db *gorm.DB) *Storage {
+func GetStorage() *Storage {
 	once.Do(func() {
-		stor = newStorage(db)
+		stor = newStorage()
 	})
 
 	return stor
 }
 
-func newStorage(db *gorm.DB) *Storage {
-	return &Storage{db: db}
+func newStorage() *Storage {
+	database := database.GetDataBase()
+	return &Storage{db: database}
 }

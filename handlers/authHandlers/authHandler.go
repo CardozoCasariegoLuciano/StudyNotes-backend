@@ -18,8 +18,8 @@ type Auth struct {
 	storage apimodels.Istorage
 }
 
-func NewAuth(store apimodels.Istorage) *Auth {
-	return &Auth{storage: store}
+func NewAuth(storage apimodels.Istorage) *Auth {
+	return &Auth{storage: storage}
 }
 
 // Login godoc
@@ -130,6 +130,7 @@ func (auth *Auth) Register(c echo.Context) error {
 	}
 
 	var newUser dbmodels.User
+
 	//Check email is not taken
 	result := auth.storage.FindUserByEmail(data.Email, &newUser)
 	if result.RowsAffected > 0 {
