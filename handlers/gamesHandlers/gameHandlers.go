@@ -32,7 +32,6 @@ func (game *Game) GetGameByID(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
-// TODO testear Todos los endpoints
 func (game *Game) CreateGame(c echo.Context) error {
 	gameData := apimodels.CreateGameData{}
 
@@ -51,12 +50,6 @@ func (game *Game) CreateGame(c echo.Context) error {
 		}
 	}
 
-	userID := c.Get("userID")
-	if userID == nil {
-		response := responses.NewResponse("ERROR", "unknow author, check the token", nil)
-		return c.JSON(http.StatusBadRequest, response)
-	}
-
 	newGame := &dbmodels.Game{
 		Title:       gameData.Title,
 		Description: gameData.Description,
@@ -70,6 +63,7 @@ func (game *Game) CreateGame(c echo.Context) error {
 
 func (game *Game) EditGame(c echo.Context) error {
 	contextGame := c.Get("Game").(*dbmodels.Game)
+
 	reqData := &apimodels.CreateGameData{}
 
 	if err := c.Bind(reqData); err != nil {
