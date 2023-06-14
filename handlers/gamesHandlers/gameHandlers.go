@@ -18,7 +18,6 @@ func NewGame(store apimodels.Istorage) *Game {
 	return &Game{storage: store}
 }
 
-// TODO testear Todos los endpoints
 func (game *Game) GetGames(c echo.Context) error {
 	AllGames := &dbmodels.Games{}
 	game.storage.GetAll(AllGames)
@@ -33,6 +32,7 @@ func (game *Game) GetGameByID(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
+// TODO testear Todos los endpoints
 func (game *Game) CreateGame(c echo.Context) error {
 	gameData := apimodels.CreateGameData{}
 

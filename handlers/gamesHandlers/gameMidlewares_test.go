@@ -19,8 +19,6 @@ import (
 	"gorm.io/gorm"
 )
 
-const basePath = "/api/v1"
-
 func Test_GetByID_AdminMiddleware_badCases(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
@@ -89,7 +87,7 @@ func Test_GetByID_AdminMiddleware_badCases(t *testing.T) {
 
 	for _, tc := range testCases {
 		testConfig := testtools.InitTestConfig{
-			Path:          basePath + "/games",
+			Path:          "/api/v1" + "/games",
 			Method:        http.MethodGet,
 			ReqBody:       nil,
 			ApplyToken:    true,
@@ -166,7 +164,7 @@ func Test_GetByID_AdminMiddleware_goodCases(t *testing.T) {
 
 	for _, tc := range testCases {
 		testConfig := testtools.InitTestConfig{
-			Path:          basePath + "/games",
+			Path:          "/api/v1" + "/games",
 			Method:        http.MethodGet,
 			ReqBody:       nil,
 			ApplyToken:    true,
@@ -243,7 +241,7 @@ func Test_GetByID_FreeMiddleware_badCases(t *testing.T) {
 
 	for _, tc := range testCases {
 		testConfig := testtools.InitTestConfig{
-			Path:          basePath + "/games",
+			Path:          "/api/v1" + "/games",
 			Method:        http.MethodGet,
 			ReqBody:       nil,
 			ApplyToken:    true,
@@ -325,7 +323,7 @@ func Test_GetByID_FreeMiddleware_goodCases(t *testing.T) {
 
 	for _, tc := range testCases {
 		testConfig := testtools.InitTestConfig{
-			Path:          basePath + "/games",
+			Path:          "/api/v1" + "/games",
 			Method:        http.MethodGet,
 			ReqBody:       nil,
 			ApplyToken:    true,
