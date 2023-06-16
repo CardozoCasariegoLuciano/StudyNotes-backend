@@ -216,7 +216,7 @@ func Test_GameByID(t *testing.T) {
 			//Test Cases
 			assert.Equal(t, tc.expectedCode, writer.Code)
 			assert.Contains(t, resp.Data, "title")
-			assert.Contains(t, resp.Data, "ID")
+			assert.Contains(t, resp.Data, "id")
 			assert.Contains(t, resp.Data, "description")
 			assert.Equal(t, tc.expectedResonse.MessageType, resp.MessageType)
 			assert.Equal(t, tc.expectedResonse.Message, resp.Message)
@@ -326,7 +326,7 @@ func Test_CreateGame(t *testing.T) {
 				assert.Equal(t, tc.expectedResonse.Data, resp.Data)
 			} else {
 				assert.Contains(t, resp.Data, "title")
-				assert.Contains(t, resp.Data, "ID")
+				assert.Contains(t, resp.Data, "id")
 				assert.Contains(t, resp.Data, "description")
 			}
 			assert.Equal(t, tc.expectedResonse.MessageType, resp.MessageType)
@@ -465,7 +465,7 @@ func Test_EditGame(t *testing.T) {
 			} else {
 				assert.Contains(t, resp.Data, "title")
 				assert.Contains(t, resp.Data, "description")
-				assert.Contains(t, resp.Data, "ID")
+				assert.Contains(t, resp.Data, "id")
 			}
 			assert.Equal(t, tc.expectedResonse.MessageType, resp.MessageType)
 			assert.Equal(t, tc.expectedResonse.Message, resp.Message)
@@ -548,7 +548,7 @@ func Test_DeletGame(t *testing.T) {
 			//Test Cases
 			assert.Equal(t, tc.expectedCode, writer.Code)
 			assert.Contains(t, resp.Data, "title")
-			assert.Contains(t, resp.Data, "ID")
+			assert.Contains(t, resp.Data, "id")
 			assert.Contains(t, resp.Data, "description")
 			assert.Equal(t, tc.expectedResonse.MessageType, resp.MessageType)
 			assert.Equal(t, tc.expectedResonse.Message, resp.Message)

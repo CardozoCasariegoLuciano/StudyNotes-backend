@@ -26,6 +26,21 @@ definitions:
     - name
     - password
     type: object
+  dbmodels.Game:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+      updated_at:
+        type: string
+    type: object
   responses.Response:
     properties:
       data:
@@ -128,4 +143,74 @@ paths:
       summary: Register new user
       tags:
       - Auth
+  /games/:
+    get:
+      consumes:
+      - application/json
+      description: List all games (no token required)
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dbmodels.Game'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      summary: Get all games
+      tags:
+      - Games
+  /games/{gameID}:
+    get:
+      consumes:
+      - application/json
+      description: Get one game by param id
+      parameters:
+      - description: ID to find the game
+        in: path
+        name: gameID
+        required: true
+        type: string
+      - description: Token to validate user
+        in: header
+        name: Authorization
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dbmodels.Game'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      summary: Get game by ID
+      tags:
+      - Games
 swagger: "2.0"

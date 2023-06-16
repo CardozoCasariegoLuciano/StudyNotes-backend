@@ -18,6 +18,15 @@ func NewGame(store apimodels.Istorage) *Game {
 	return &Game{storage: store}
 }
 
+// GetGames
+// @Summary Get all games
+// @Description List all games (no token required)
+// @Tags Games
+// @Accept json
+// @Produce json
+// @Success 200 {object} responses.Response{data=[]dbmodels.Game}
+// @Failure 400 {object} responses.Response{data=object}
+// @Router /games/ [get]
 func (game *Game) GetGames(c echo.Context) error {
 	AllGames := &dbmodels.Games{}
 	game.storage.GetAll(AllGames)
@@ -26,6 +35,17 @@ func (game *Game) GetGames(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
+// GetGameByID
+// @Summary Get game by ID
+// @Description Get one game by param id
+// @Tags Games
+// @Accept json
+// @Produce json
+// @Param gameID path string true "ID to find the game"
+// @Param Authorization header string false "Token to validate user"
+// @Success 200 {object} responses.Response{data=dbmodels.Game}
+// @Failure 400 {object} responses.Response{data=object}
+// @Router /games/{gameID} [get]
 func (game *Game) GetGameByID(c echo.Context) error {
 	Game := c.Get("Game")
 	response := responses.NewResponse("OK", "Game Selected", Game)

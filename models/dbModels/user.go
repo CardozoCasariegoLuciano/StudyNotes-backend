@@ -10,7 +10,7 @@ type User struct {
 	Password string `json:"password" gorm:"type:VARCHAR(255); NOT NULL"`
 	Image    string `json:"image" gorm:"type:VARCHAR(255)"`
 	Role     string `json:"role" gorm:"type:enum('USER', 'ADMIN', 'SUPER_ADMIN'); NOT NULL; DEFAULT 'USER'"`
-	gorm.Model
+	CommonModelFields
 }
 
 type Users []User
