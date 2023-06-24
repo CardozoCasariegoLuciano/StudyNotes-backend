@@ -52,6 +52,17 @@ func (game *Game) GetGameByID(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
+// CreateGame
+// @Summary Create new game
+// @Description Create new game for ADMIN or SUPER-ADMIN users
+// @Tags Games
+// @Accept json
+// @Produce json
+// @Param GameData body apimodels.CreateGameData true "request body"
+// @Param Authorization header string false "Token to validate user"
+// @Success 200 {object} responses.Response{data=dbmodels.Game}
+// @Failure 400 {object} responses.Response{data=object}
+// @Router /games/ [post]
 func (game *Game) CreateGame(c echo.Context) error {
 	gameData := apimodels.CreateGameData{}
 
@@ -81,6 +92,18 @@ func (game *Game) CreateGame(c echo.Context) error {
 	return c.JSON(http.StatusCreated, response)
 }
 
+// EditGame
+// @Summary Edit game
+// @Description Edit game for ADMIN or SUPER-ADMIN
+// @Tags Games
+// @Accept json
+// @Produce json
+// @Param gameID path string true "ID to find the game"
+// @Param GameData body apimodels.CreateGameData true "request body"
+// @Param Authorization header string false "Token to validate user"
+// @Success 200 {object} responses.Response{data=dbmodels.Game}
+// @Failure 400 {object} responses.Response{data=object}
+// @Router /games/{gameID} [PUT]
 func (game *Game) EditGame(c echo.Context) error {
 	contextGame := c.Get("Game").(*dbmodels.Game)
 
@@ -110,6 +133,17 @@ func (game *Game) EditGame(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
+// DeleteGame
+// @Summary Delete game
+// @Description Delete game for ADMIN or SUPER-ADMIN
+// @Tags Games
+// @Accept json
+// @Produce json
+// @Param gameID path string true "ID to find the game"
+// @Param Authorization header string false "Token to validate user"
+// @Success 200 {object} responses.Response{data=dbmodels.Game}
+// @Failure 400 {object} responses.Response{data=object}
+// @Router /games/{gameID} [DELETE]
 func (game *Game) DeleteGame(c echo.Context) error {
 	contextGame := c.Get("Game").(*dbmodels.Game)
 	game.storage.DeleteByID(int(contextGame.ID), contextGame)
