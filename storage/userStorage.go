@@ -1,16 +1,18 @@
 package storage
 
 import (
-	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/models"
+	dbmodels "github.com/CardozoCasariegoLuciano/StudyNotes-backend/models/dbModels"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
-func (st *Storage) CreateUser(user *models.User) *gorm.DB {
-	return st.db.Save(user)
-}
-
-func (st *Storage) FindUserByEmail(email string, model *models.User) *gorm.DB {
+/*
+Nota
+Cuando actualices agregues un nuevo metodo actualiza
+la interfaz Istorage
+models/apimodels/Istorage
+*/
+func (st *Storage) FindUserByEmail(email string, model *dbmodels.User) *gorm.DB {
 	return st.db.Where("email = ?", email).First(model)
 }
 

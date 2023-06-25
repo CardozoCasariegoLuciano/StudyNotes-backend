@@ -7,18 +7,19 @@ import (
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/handlers/responses"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/environment"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/roles"
-	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/models"
+	apimodels "github.com/CardozoCasariegoLuciano/StudyNotes-backend/models/apiModels"
+	dbmodels "github.com/CardozoCasariegoLuciano/StudyNotes-backend/models/dbModels"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type Auth struct {
-	storage models.Istorage
+	storage apimodels.Istorage
 }
 
-func NewAuth(store models.Istorage) *Auth {
-	return &Auth{storage: store}
+func NewAuth(storage apimodels.Istorage) *Auth {
+	return &Auth{storage: storage}
 }
 
 // Login godoc
@@ -26,13 +27,13 @@ func NewAuth(store models.Istorage) *Auth {
 // @Description Login a user and get his token
 // @Tags Auth
 // @Accept json
-// @Param Register body models.Login true "request body"
+// @Param Register body apimodels.Login true "request body"
 // @Produce json
 // @Success 200 {object} responses.Response{data=swaggertypes.SwaggerCustomTypes{token=string,userName=string,email=string}}
 // @Failure 400 {object} responses.Response{data=object}
 // @Router /auth/login [post]
 func (auth *Auth) Login(c echo.Context) error {
-	data := models.Login{}
+	data := apimodels.Login{}
 
 	if err := c.Bind(&data); err != nil {
 		response := responses.NewResponse("ERROR", "Not valid body information", nil)
@@ -49,7 +50,7 @@ func (auth *Auth) Login(c echo.Context) error {
 		}
 	}
 
-	var userLogged models.User
+	var userLogged dbmodels.User
 	//Check email exist
 	result := auth.storage.FindUserByEmail(data.Email, &userLogged)
 	if result.RowsAffected == 0 {
@@ -65,7 +66,7 @@ func (auth *Auth) Login(c echo.Context) error {
 	}
 
 	//Create token
-	claims := models.JwtCustomClaims{
+	claims := apimodels.JwtCustomClaims{
 		Id:    int(userLogged.ID),
 		Email: userLogged.Email,
 		Role:  userLogged.Role,
@@ -93,13 +94,13 @@ func (auth *Auth) Login(c echo.Context) error {
 // @Description Charge new user into the database
 // @Tags Auth
 // @Accept json
-// @Param Register body models.Register true "request body"
+// @Param Register body apimodels.Register true "request body"
 // @Produce json
 // @Success 200 {object} responses.Response{data=swaggertypes.SwaggerCustomTypes{token=string}}
 // @Failure 400 {object} responses.Response{data=object}
 // @Router /auth/register [post]
 func (auth *Auth) Register(c echo.Context) error {
-	data := models.Register{}
+	data := apimodels.Register{}
 
 	if err := c.Bind(&data); err != nil {
 		response := responses.NewResponse("ERROR", "Not valid body information", nil)
@@ -128,7 +129,8 @@ func (auth *Auth) Register(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, response)
 	}
 
-	var newUser models.User
+	var newUser dbmodels.User
+
 	//Check email is not taken
 	result := auth.storage.FindUserByEmail(data.Email, &newUser)
 	if result.RowsAffected > 0 {
@@ -137,16 +139,16 @@ func (auth *Auth) Register(c echo.Context) error {
 	}
 
 	//Saving the new user
-	newUser = models.User{
+	newUser = dbmodels.User{
 		Name:     data.Name,
 		Password: string(hashedPass),
 		Email:    data.Email,
 		Role:     roles.USER,
 	}
-	auth.storage.CreateUser(&newUser)
+	auth.storage.Save(&newUser)
 
 	//Create token
-	claims := models.JwtCustomClaims{
+	claims := apimodels.JwtCustomClaims{
 		Id:    int(newUser.ID),
 		Email: data.Email,
 		Role:  roles.USER,

@@ -4,18 +4,15 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
-	"net/http/httptest"
-	"strings"
 	"testing"
 
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/handlers/authHandlers"
-	mock_models "github.com/CardozoCasariegoLuciano/StudyNotes-backend/handlers/mocks"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/handlers/responses"
-	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/customValidators"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/environment"
-	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/models"
+	testtools "github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/testTools"
+	mock_models "github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/testTools/mocks"
+	dbmodels "github.com/CardozoCasariegoLuciano/StudyNotes-backend/models/dbModels"
 	"github.com/golang/mock/gomock"
-	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/gorm"
 )
@@ -32,25 +29,25 @@ func TestRegister_badCases(t *testing.T) {
 
 	mockUserRepo.
 		EXPECT().
-		CreateUser(gomock.AssignableToTypeOf(&models.User{})).
+		Save(gomock.AssignableToTypeOf(&dbmodels.User{})).
 		Return(nil).
 		AnyTimes()
 
 	mockUserRepo.
 		EXPECT().
-		FindUserByEmail(gomock.Eq("mailtaken@example.com"), gomock.AssignableToTypeOf(&models.User{})).
+		FindUserByEmail(gomock.Eq("mailtaken@example.com"), gomock.AssignableToTypeOf(&dbmodels.User{})).
 		Return(&gorm.DB{RowsAffected: 1}).AnyTimes()
 
 	mockUserRepo.
 		EXPECT().
-		FindUserByEmail(gomock.AssignableToTypeOf(""), gomock.AssignableToTypeOf(&models.User{})).
+		FindUserByEmail(gomock.AssignableToTypeOf(""), gomock.AssignableToTypeOf(&dbmodels.User{})).
 		Return(&gorm.DB{RowsAffected: 0}).AnyTimes()
 
 	environment.SetTestEnvirontment()
 	testCases := []struct {
 		name            string
 		path            string
-		body            interface{}
+		body            map[string]interface{}
 		expectedCode    int
 		expectedResonse responses.Response
 	}{
@@ -135,28 +132,19 @@ func TestRegister_badCases(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
+		testConfig := testtools.InitTestConfig{
+			Path:       basePath + "/games",
+			Method:     http.MethodGet,
+			ReqBody:    tc.body,
+			ApplyToken: false,
+		}
+
+		testData := testtools.SetGenericTestData(&testConfig)
+		context := *testData.Context
+		writer := testData.Recoder
+
 		t.Run(tc.name, func(t *testing.T) {
-			//Init objects
-			e := echo.New()
-			e.Validator = customValidators.NewCustomValidator()
-
-			//Parse map of strings to []bytes of the body
-			body, err := json.Marshal(tc.body)
-			assert.NoError(t, err)
-
-			//Create new request, recorder(writer) and contetx
-			request := httptest.NewRequest(
-				http.MethodPost,
-				basePath+tc.path,
-				strings.NewReader(string(body)),
-			)
-			writer := httptest.NewRecorder()
-			request.Header.Set("Content-Type", "application/json")
-
-			context := e.NewContext(request, writer)
-
-			//Call the Register method
-			err = auth.Register(context)
+			err := auth.Register(context)
 			assert.NoError(t, err)
 
 			//Parse the []bytes of the response
@@ -185,19 +173,19 @@ func TestRegister_GoodCases(t *testing.T) {
 
 	mockUserRepo.
 		EXPECT().
-		CreateUser(gomock.AssignableToTypeOf(&models.User{})).
+		Save(gomock.AssignableToTypeOf(&dbmodels.User{})).
 		Return(nil).
 		AnyTimes()
 
 	mockUserRepo.
 		EXPECT().
-		FindUserByEmail(gomock.AssignableToTypeOf(""), gomock.AssignableToTypeOf(&models.User{})).
+		FindUserByEmail(gomock.AssignableToTypeOf(""), gomock.AssignableToTypeOf(&dbmodels.User{})).
 		Return(&gorm.DB{RowsAffected: 0}).AnyTimes()
 
 	testCases := []struct {
 		name            string
 		path            string
-		body            interface{}
+		body            map[string]interface{}
 		expectedCode    int
 		expectedResonse responses.Response
 	}{
@@ -219,28 +207,18 @@ func TestRegister_GoodCases(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
+		testConfig := testtools.InitTestConfig{
+			Path:       basePath + "/games",
+			Method:     http.MethodGet,
+			ReqBody:    tc.body,
+			ApplyToken: false,
+		}
+
+		testData := testtools.SetGenericTestData(&testConfig)
+		context := *testData.Context
+		writer := testData.Recoder
 		t.Run(tc.name, func(t *testing.T) {
-			// Init objects
-			e := echo.New()
-			e.Validator = customValidators.NewCustomValidator()
-
-			// Parse map of strings to []bytes of the body
-			body, err := json.Marshal(tc.body)
-			assert.NoError(t, err)
-
-			// Create new request, recorder(writer) and contetx
-			request := httptest.NewRequest(
-				http.MethodPost,
-				basePath+tc.path,
-				strings.NewReader(string(body)),
-			)
-			writer := httptest.NewRecorder()
-			request.Header.Set("Content-Type", "application/json")
-
-			context := e.NewContext(request, writer)
-
-			// Call the Register method
-			err = auth.Register(context)
+			err := auth.Register(context)
 			assert.NoError(t, err)
 
 			// Parse the []bytes of the response
@@ -270,12 +248,12 @@ func TestLogin_badCases(t *testing.T) {
 
 	mockUserRepo.
 		EXPECT().
-		FindUserByEmail(gomock.Eq("noExist@email.com"), gomock.AssignableToTypeOf(&models.User{})).
+		FindUserByEmail(gomock.Eq("noExist@email.com"), gomock.AssignableToTypeOf(&dbmodels.User{})).
 		Return(&gorm.DB{RowsAffected: 0}).AnyTimes()
 
 	mockUserRepo.
 		EXPECT().
-		FindUserByEmail(gomock.AssignableToTypeOf(""), gomock.AssignableToTypeOf(&models.User{})).
+		FindUserByEmail(gomock.AssignableToTypeOf(""), gomock.AssignableToTypeOf(&dbmodels.User{})).
 		Return(&gorm.DB{RowsAffected: 1}).AnyTimes()
 
 	mockUserRepo.
@@ -286,7 +264,7 @@ func TestLogin_badCases(t *testing.T) {
 	testCases := []struct {
 		name            string
 		path            string
-		body            interface{}
+		body            map[string]interface{}
 		expectedCode    int
 		expectedResonse responses.Response
 	}{
@@ -362,29 +340,19 @@ func TestLogin_badCases(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
+		testConfig := testtools.InitTestConfig{
+			Path:       basePath + "/games",
+			Method:     http.MethodGet,
+			ReqBody:    tc.body,
+			ApplyToken: false,
+		}
+
+		testData := testtools.SetGenericTestData(&testConfig)
+		context := *testData.Context
+		writer := testData.Recoder
 		t.Run(tc.name, func(t *testing.T) {
-
-			//Init objects
-			e := echo.New()
-			e.Validator = customValidators.NewCustomValidator()
-
-			//Parse map of strings to []bytes of the body
-			body, err := json.Marshal(tc.body)
-			assert.NoError(t, err)
-
-			//Create new request, recorder(writer) and contetx
-			request := httptest.NewRequest(
-				http.MethodPost,
-				basePath+tc.path,
-				strings.NewReader(string(body)),
-			)
-			writer := httptest.NewRecorder()
-			request.Header.Set("Content-Type", "application/json")
-
-			context := e.NewContext(request, writer)
-
 			//Call the Register method
-			err = auth.Login(context)
+			err := auth.Login(context)
 			assert.NoError(t, err)
 
 			//Parse the []bytes of the response
@@ -413,7 +381,7 @@ func TestLogin_GoodCases(t *testing.T) {
 
 	mockUserRepo.
 		EXPECT().
-		FindUserByEmail(gomock.AssignableToTypeOf(""), gomock.AssignableToTypeOf(&models.User{})).
+		FindUserByEmail(gomock.AssignableToTypeOf(""), gomock.AssignableToTypeOf(&dbmodels.User{})).
 		Return(&gorm.DB{RowsAffected: 1}).AnyTimes()
 
 	mockUserRepo.
@@ -424,7 +392,7 @@ func TestLogin_GoodCases(t *testing.T) {
 	testCases := []struct {
 		name            string
 		path            string
-		body            interface{}
+		body            map[string]interface{}
 		expectedCode    int
 		expectedResonse responses.Response
 	}{
@@ -444,28 +412,19 @@ func TestLogin_GoodCases(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
+		testConfig := testtools.InitTestConfig{
+			Path:       basePath + "/games",
+			Method:     http.MethodGet,
+			ReqBody:    tc.body,
+			ApplyToken: false,
+		}
+
+		testData := testtools.SetGenericTestData(&testConfig)
+		context := *testData.Context
+		writer := testData.Recoder
 		t.Run(tc.name, func(t *testing.T) {
-			// Init objects
-			e := echo.New()
-			e.Validator = customValidators.NewCustomValidator()
-
-			// Parse map of strings to []bytes of the body
-			body, err := json.Marshal(tc.body)
-			assert.NoError(t, err)
-
-			// Create new request, recorder(writer) and contetx
-			request := httptest.NewRequest(
-				http.MethodPost,
-				basePath+tc.path,
-				strings.NewReader(string(body)),
-			)
-			writer := httptest.NewRecorder()
-			request.Header.Set("Content-Type", "application/json")
-
-			context := e.NewContext(request, writer)
-
 			// Call the Register method
-			err = auth.Login(context)
+			err := auth.Login(context)
 			assert.NoError(t, err)
 
 			// Parse the []bytes of the response

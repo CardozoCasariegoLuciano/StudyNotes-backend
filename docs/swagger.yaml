@@ -1,6 +1,17 @@
 basePath: /api/v1
 definitions:
-  models.Login:
+  apimodels.CreateGameData:
+    properties:
+      description:
+        type: string
+      title:
+        minLength: 3
+        type: string
+    required:
+    - description
+    - title
+    type: object
+  apimodels.Login:
     properties:
       email:
         type: string
@@ -10,7 +21,7 @@ definitions:
     - email
     - password
     type: object
-  models.Register:
+  apimodels.Register:
     properties:
       confirmPassword:
         type: string
@@ -25,6 +36,21 @@ definitions:
     - email
     - name
     - password
+    type: object
+  dbmodels.Game:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+      updated_at:
+        type: string
     type: object
   responses.Response:
     properties:
@@ -53,7 +79,7 @@ paths:
         name: Register
         required: true
         schema:
-          $ref: '#/definitions/models.Login'
+          $ref: '#/definitions/apimodels.Login'
       produces:
       - application/json
       responses:
@@ -98,7 +124,7 @@ paths:
         name: Register
         required: true
         schema:
-          $ref: '#/definitions/models.Register'
+          $ref: '#/definitions/apimodels.Register'
       produces:
       - application/json
       responses:
@@ -128,4 +154,195 @@ paths:
       summary: Register new user
       tags:
       - Auth
+  /games/:
+    get:
+      consumes:
+      - application/json
+      description: List all games (no token required)
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/dbmodels.Game'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      summary: Get all games
+      tags:
+      - Games
+    post:
+      consumes:
+      - application/json
+      description: Create new game for ADMIN or SUPER-ADMIN users
+      parameters:
+      - description: request body
+        in: body
+        name: GameData
+        required: true
+        schema:
+          $ref: '#/definitions/apimodels.CreateGameData'
+      - description: Token to validate user
+        in: header
+        name: Authorization
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dbmodels.Game'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      summary: Create new game
+      tags:
+      - Games
+  /games/{gameID}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete game for ADMIN or SUPER-ADMIN
+      parameters:
+      - description: ID to find the game
+        in: path
+        name: gameID
+        required: true
+        type: string
+      - description: Token to validate user
+        in: header
+        name: Authorization
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dbmodels.Game'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      summary: Delete game
+      tags:
+      - Games
+    get:
+      consumes:
+      - application/json
+      description: Get one game by param id
+      parameters:
+      - description: ID to find the game
+        in: path
+        name: gameID
+        required: true
+        type: string
+      - description: Token to validate user
+        in: header
+        name: Authorization
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dbmodels.Game'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      summary: Get game by ID
+      tags:
+      - Games
+    put:
+      consumes:
+      - application/json
+      description: Edit game for ADMIN or SUPER-ADMIN
+      parameters:
+      - description: ID to find the game
+        in: path
+        name: gameID
+        required: true
+        type: string
+      - description: request body
+        in: body
+        name: GameData
+        required: true
+        schema:
+          $ref: '#/definitions/apimodels.CreateGameData'
+      - description: Token to validate user
+        in: header
+        name: Authorization
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dbmodels.Game'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      summary: Edit game
+      tags:
+      - Games
 swagger: "2.0"

@@ -1,4 +1,4 @@
-package models
+package apimodels
 
 type Login struct {
 	Email    string `json:"email" validate:"required,email"`

@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/environment"
 	"gorm.io/driver/mysql"
@@ -9,11 +10,21 @@ import (
 )
 
 var dataBaseURI = getDataBaseURI()
+var db *gorm.DB
+var once sync.Once
 
-func NewDataBase() (db *gorm.DB) {
+func GetDataBase() *gorm.DB {
+	once.Do(func() {
+		db = newDataBase()
+	})
+	return db
+}
+
+func newDataBase() (db *gorm.DB) {
 	env := environment.GetEnvirontment()
 	if env != "test" {
-		db, err := gorm.Open(mysql.Open(dataBaseURI), &gorm.Config{})
+		var err error
+		db, err = gorm.Open(mysql.Open(dataBaseURI), &gorm.Config{})
 		if err != nil {
 			fmt.Println("Error en la conexion", err)
 			panic(err)
