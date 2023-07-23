@@ -1,28 +1,33 @@
 ## StudyNotes Backend
 ###### Que es?
-StudyNotes es una aplicación en la que los usuarios podrán crear y
-compartir apuntes de cualquier tipo, ya sean resúmenes para la
-escuela o universidad, recetas de comidas, estudios de idiomas,
-crear documentación, etc
+MemoryCards es una aplicación para acompañar todo tipo de aprendizaje que requiera memorizacion. <br/>
 
 ###### Tecnologías usadas:
 - Golang
 - Echo framework
 - JWT
-- Sass
 - MySQL GORM
 
 #### Como bajar y correr el proyecto en local
 ###### Dependencias:
 - Go
 - Git
+- MySQL
 
 ###### Pasos:
 1) Clonar el repositorio con el comando: <br/> `https://github.com/CardozoCasariegoLuciano/StudyNotes-backend`
 2) Pararse en la raíz del proyecto e instalar las dependencias con `go mod download`
-3) Levantar el proyecto con `go run main.go`
+3) Tener corriendo MySQL
+4) Crear una base de datos llamada `studyNotes`
+5) Crear un archivo .env en la raiz del proyecto y escribir <br/>
+`DB_PASSWORD=[tu clave de conexion a la BD]` <br/>
+`DB_HOST=localhost:3306`<br/>
+`DB_NAME=studyNotes `<br/>
 
-- Nota: opcional mente se puede levantar el [Frontend](https://github.com/CardozoCasariegoLuciano/StudyNotes-Frontend/tree/develop)
+- Nota: por defecto el usuario es root, si tenes uno distinto lo podes modificar en `/database/db_config.go` <br/>
+6) Levantar el proyecto con `go run main.go`
+
+- Nota: opcionalmente se puede levantar el [Frontend](https://github.com/CardozoCasariegoLuciano/StudyNotes-Frontend/tree/develop)
      para interactuar con la aplicación como lo haría el usuario final
 
 #### Como trabajamos
@@ -50,6 +55,9 @@ de la tarea que estemos tratando
 - [FigJam](https://www.figma.com/file/5JzllwcWgURAKeaQvyBXMs/StudyNotes?node-id=0%3A1&t=MGov6Z7RawYZ7i7q-1):
     Estructura y planes a futuro de la aplicación
 
+#### Hot reload
+- Recomendamos instalar [fresh](https://github.com/gravityblast/fresh), una utilidad que vuelve a levantar el proyecto cada vez que se realiza un cambio
+
 
 #### Test
 - Opcionalmente se puede instalar [gotestsum](https://github.com/gotestyourself/gotestsum)
@@ -60,11 +68,11 @@ Para correr todos los test: `go test -v ./...`
 #### Mocks
 
 ###### Actualizar los mocks:
-- Cuando se modifique la interfaz Istorage IMPORTANTE actualizar los mocks con:<br/>
-` mockgen -source=models/apiModels/storage.go -destination=./helpers/testTools/mocks/IStorageMocks.go `
+- Cuando se modifique la interfaz Istorage IMPORTANTE actualizar los mocks ejecutando el script:<br/>
+`./updateMocks.sh` <br/>
 tanto para tenerlos al momento de hacer los test como para que no se rompan los que ya estan
 
 
 #### Actualizar swagger
-- Para actualizar la documentación de swager: `swag init`
+- Para actualizar la documentación de swager ejecutar el script: `./updateSwager.sh`
 
