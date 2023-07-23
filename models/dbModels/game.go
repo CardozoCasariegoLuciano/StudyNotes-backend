@@ -7,6 +7,7 @@ import (
 type Game struct {
 	Title       string `json:"title" gorm:"type:VARCHAR(150); NOT NULL"`
 	Description string `json:"description" gorm:"type:VARCHAR(555); NOT NULL"`
+	UserID      int    `json:"user_id"`
 	CommonModelFields
 }
 

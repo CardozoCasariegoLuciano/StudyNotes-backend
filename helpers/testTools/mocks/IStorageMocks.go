@@ -91,6 +91,20 @@ func (mr *MockIstorageMockRecorder) GetAll(model interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAll", reflect.TypeOf((*MockIstorage)(nil).GetAll), model)
 }
 
+// GetAllGames mocks base method.
+func (m *MockIstorage) GetAllGames(userID int, model interface{}) *gorm.DB {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAllGames", userID, model)
+	ret0, _ := ret[0].(*gorm.DB)
+	return ret0
+}
+
+// GetAllGames indicates an expected call of GetAllGames.
+func (mr *MockIstorageMockRecorder) GetAllGames(userID, model interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllGames", reflect.TypeOf((*MockIstorage)(nil).GetAllGames), userID, model)
+}
+
 // GetById mocks base method.
 func (m *MockIstorage) GetById(id int, model interface{}) *gorm.DB {
 	m.ctrl.T.Helper()
@@ -103,6 +117,20 @@ func (m *MockIstorage) GetById(id int, model interface{}) *gorm.DB {
 func (mr *MockIstorageMockRecorder) GetById(id, model interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetById", reflect.TypeOf((*MockIstorage)(nil).GetById), id, model)
+}
+
+// GetGameById mocks base method.
+func (m *MockIstorage) GetGameById(userID, id int, model interface{}) *gorm.DB {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetGameById", userID, id, model)
+	ret0, _ := ret[0].(*gorm.DB)
+	return ret0
+}
+
+// GetGameById indicates an expected call of GetGameById.
+func (mr *MockIstorageMockRecorder) GetGameById(userID, id, model interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetGameById", reflect.TypeOf((*MockIstorage)(nil).GetGameById), userID, id, model)
 }
 
 // Save mocks base method.

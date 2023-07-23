@@ -175,7 +175,7 @@ const docTemplate = `{
         },
         "/games/": {
             "get": {
-                "description": "List all games (no token required)",
+                "description": "List all user games",
                 "consumes": [
                     "application/json"
                 ],
@@ -185,7 +185,15 @@ const docTemplate = `{
                 "tags": [
                     "Games"
                 ],
-                "summary": "Get all games",
+                "summary": "Get all user games",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token to validate user",
+                        "name": "Authorization",
+                        "in": "header"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -229,7 +237,7 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "Create new game for ADMIN or SUPER-ADMIN users",
+                "description": "Create new game",
                 "consumes": [
                     "application/json"
                 ],
@@ -365,7 +373,7 @@ const docTemplate = `{
                 }
             },
             "put": {
-                "description": "Edit game for ADMIN or SUPER-ADMIN",
+                "description": "Edit game",
                 "consumes": [
                     "application/json"
                 ],
@@ -440,7 +448,7 @@ const docTemplate = `{
                 }
             },
             "delete": {
-                "description": "Delete game for ADMIN or SUPER-ADMIN",
+                "description": "Delete game",
                 "consumes": [
                     "application/json"
                 ],
@@ -582,6 +590,9 @@ const docTemplate = `{
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
                 }
             }
         },

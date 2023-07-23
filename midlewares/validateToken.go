@@ -1,7 +1,6 @@
 package midlewares
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/handlers/responses"
@@ -24,7 +23,6 @@ func ValidateToken(next echo.HandlerFunc) echo.HandlerFunc {
 			return []byte(secret), nil
 		})
 		if err != nil {
-			fmt.Println(err)
 			response := responses.NewResponse("ERROR", "Wrong token", nil)
 			return c.JSON(http.StatusUnauthorized, response)
 		}

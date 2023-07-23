@@ -10,9 +10,9 @@ import (
 func GamesRoutes(gameGroup *echo.Group, storage *storage.Storage) {
 	games := gameshandlers.NewGame(storage)
 
-	gameGroup.GET("/", games.GetGames)
-	gameGroup.POST("/", games.CreateGame, midlewares.ValidateToken, midlewares.ValidateIsAdmin)
-	gameGroup.GET("/:gameID", games.GetGameByID, midlewares.ValidateToken, games.GetGameByQueryIDAdmin)
-	gameGroup.PUT("/:gameID", games.EditGame, midlewares.ValidateToken, games.GetGameByQueryIDAdmin)
-	gameGroup.DELETE("/:gameID", games.DeleteGame, midlewares.ValidateToken, games.GetGameByQueryIDAdmin)
+	gameGroup.GET("/", games.GetGames, midlewares.ValidateToken)
+	gameGroup.POST("/", games.CreateGame, midlewares.ValidateToken)
+	gameGroup.GET("/:gameID", games.GetGameByID, midlewares.ValidateToken, games.GetGameByQueryID)
+	gameGroup.PUT("/:gameID", games.EditGame, midlewares.ValidateToken, games.GetGameByQueryID)
+	gameGroup.DELETE("/:gameID", games.DeleteGame, midlewares.ValidateToken, games.GetGameByQueryID)
 }
