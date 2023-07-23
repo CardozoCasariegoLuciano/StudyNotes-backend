@@ -6,6 +6,7 @@ import (
 
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/handlers/responses"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/environment"
+	errorcodes "github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/errorCodes"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/roles"
 	apimodels "github.com/CardozoCasariegoLuciano/StudyNotes-backend/models/apiModels"
 	dbmodels "github.com/CardozoCasariegoLuciano/StudyNotes-backend/models/dbModels"
@@ -36,16 +37,16 @@ func (auth *Auth) Login(c echo.Context) error {
 	data := apimodels.Login{}
 
 	if err := c.Bind(&data); err != nil {
-		response := responses.NewResponse("ERROR", "Not valid body information", nil)
+		response := responses.NewResponse(errorcodes.BODY_TYPES_ERROR, "Not valid body information", nil)
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
 	if err := c.Validate(&data); err != nil {
 		if strings.Contains(err.Error(), "'email' tag") {
-			response := responses.NewResponse("ERROR", "email field must be a valid email", nil)
+			response := responses.NewResponse(errorcodes.BODY_VALIDATION_ERROR, "email field must be a valid email", nil)
 			return c.JSON(http.StatusBadRequest, response)
 		} else {
-			response := responses.NewResponse("ERROR", "All fields are required", nil)
+			response := responses.NewResponse(errorcodes.BODY_VALIDATION_ERROR, "All fields are required", nil)
 			return c.JSON(http.StatusBadRequest, response)
 		}
 	}
@@ -54,14 +55,14 @@ func (auth *Auth) Login(c echo.Context) error {
 	//Check email exist
 	result := auth.storage.FindUserByEmail(data.Email, &userLogged)
 	if result.RowsAffected == 0 {
-		response := responses.NewResponse("ERROR", "Wrong email or password", nil)
+		response := responses.NewResponse(errorcodes.WRONG_LOGIN_DATA, "Wrong email or password", nil)
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
 	//compare password
 	err := auth.storage.ComparePasswords(userLogged.Password, data.Password)
 	if err != nil {
-		response := responses.NewResponse("ERROR", "Wrong email or password", nil)
+		response := responses.NewResponse(errorcodes.WRONG_LOGIN_DATA, "Wrong email or password", nil)
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
@@ -74,7 +75,7 @@ func (auth *Auth) Login(c echo.Context) error {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	t, err := token.SignedString([]byte(environment.GetJwtSecretKey()))
 	if err != nil {
-		response := responses.NewResponse("ERROR", "trouble creating a JWT", nil)
+		response := responses.NewResponse(errorcodes.JWT_ERROR, "trouble creating a JWT", nil)
 		return c.JSON(http.StatusInternalServerError, response)
 	}
 
@@ -103,29 +104,29 @@ func (auth *Auth) Register(c echo.Context) error {
 	data := apimodels.Register{}
 
 	if err := c.Bind(&data); err != nil {
-		response := responses.NewResponse("ERROR", "Not valid body information", nil)
+		response := responses.NewResponse(errorcodes.BODY_TYPES_ERROR, "Not valid body information", nil)
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
 	if err := c.Validate(&data); err != nil {
 		if strings.Contains(err.Error(), "'email' tag") {
-			response := responses.NewResponse("ERROR", "email field must be a valid email", nil)
+			response := responses.NewResponse(errorcodes.BODY_VALIDATION_ERROR, "email field must be a valid email", nil)
 			return c.JSON(http.StatusBadRequest, response)
 		} else {
-			response := responses.NewResponse("ERROR", "All fields are required", nil)
+			response := responses.NewResponse(errorcodes.BODY_VALIDATION_ERROR, "All fields are required", nil)
 			return c.JSON(http.StatusBadRequest, response)
 		}
 	}
 
 	if data.Password != data.ConfirmPassword {
-		response := responses.NewResponse("ERROR", "Passwords are not equals", nil)
+		response := responses.NewResponse(errorcodes.DATA_NO_MATCH, "Passwords are not equals", nil)
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
 	//Hashing ths password
 	hashedPass, err := bcrypt.GenerateFromPassword([]byte(data.Password), bcrypt.DefaultCost)
 	if err != nil {
-		response := responses.NewResponse("ERROR", "Error hashing the password", nil)
+		response := responses.NewResponse(errorcodes.HASH_PASS_ERROR, "Error hashing the password", nil)
 		return c.JSON(http.StatusInternalServerError, response)
 	}
 
@@ -134,7 +135,7 @@ func (auth *Auth) Register(c echo.Context) error {
 	//Check email is not taken
 	result := auth.storage.FindUserByEmail(data.Email, &newUser)
 	if result.RowsAffected > 0 {
-		response := responses.NewResponse("ERROR", "Email already taken", nil)
+		response := responses.NewResponse(errorcodes.MAIL_TAKEN, "Email already taken", nil)
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
@@ -156,7 +157,7 @@ func (auth *Auth) Register(c echo.Context) error {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	t, err := token.SignedString([]byte(environment.GetJwtSecretKey()))
 	if err != nil {
-		response := responses.NewResponse("ERROR", "trouble creating a JWT", nil)
+		response := responses.NewResponse(errorcodes.JWT_ERROR, "trouble creating a JWT", nil)
 		return c.JSON(http.StatusInternalServerError, response)
 	}
 

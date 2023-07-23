@@ -8,6 +8,7 @@ import (
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/handlers/responses"
 	userhandlers "github.com/CardozoCasariegoLuciano/StudyNotes-backend/handlers/userHandlers"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/environment"
+	errorcodes "github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/errorCodes"
 	testtools "github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/testTools"
 	mock_models "github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/testTools/mocks"
 	apimodels "github.com/CardozoCasariegoLuciano/StudyNotes-backend/models/apiModels"
@@ -126,7 +127,7 @@ func Test_EditUser(t *testing.T) {
 				"image": 123,
 			},
 			expectedResonse: responses.Response{
-				MessageType: "ERROR",
+				MessageType: errorcodes.BODY_TYPES_ERROR,
 				Message:     "Not valid body information",
 				Data:        nil,
 			},
@@ -137,7 +138,7 @@ func Test_EditUser(t *testing.T) {
 			userID:       userID,
 			reqBody:      map[string]interface{}{},
 			expectedResonse: responses.Response{
-				MessageType: "ERROR",
+				MessageType: errorcodes.BODY_VALIDATION_ERROR,
 				Message:     "There are required fields",
 				Data:        nil,
 			},
@@ -149,7 +150,7 @@ func Test_EditUser(t *testing.T) {
 			reqBody: map[string]interface{}{
 				"name": "qweqqweqweqweqweasdqwasdqwdasdqwdasdwe"},
 			expectedResonse: responses.Response{
-				MessageType: "ERROR",
+				MessageType: errorcodes.BODY_VALIDATION_ERROR,
 				Message:     "Name field must have less than 30 characters",
 				Data:        nil,
 			},

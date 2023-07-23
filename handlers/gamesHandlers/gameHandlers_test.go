@@ -10,6 +10,7 @@ import (
 	gameshandlers "github.com/CardozoCasariegoLuciano/StudyNotes-backend/handlers/gamesHandlers"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/handlers/responses"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/environment"
+	errorcodes "github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/errorCodes"
 	testtools "github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/testTools"
 	mock_models "github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/testTools/mocks"
 	dbmodels "github.com/CardozoCasariegoLuciano/StudyNotes-backend/models/dbModels"
@@ -269,7 +270,7 @@ func Test_CreateGame(t *testing.T) {
 			reqBody:      map[string]interface{}{},
 			userID:       100,
 			expectedResonse: responses.Response{
-				MessageType: "ERROR",
+				MessageType: errorcodes.BODY_VALIDATION_ERROR,
 				Message:     "All fields are required",
 				Data:        nil,
 			},
@@ -280,7 +281,7 @@ func Test_CreateGame(t *testing.T) {
 			expectedCode: http.StatusBadRequest,
 			userID:       100,
 			expectedResonse: responses.Response{
-				MessageType: "ERROR",
+				MessageType: errorcodes.BODY_TYPES_ERROR,
 				Message:     "Not valid body information",
 				Data:        nil,
 			},
@@ -295,7 +296,7 @@ func Test_CreateGame(t *testing.T) {
 			expectedCode: http.StatusBadRequest,
 			userID:       100,
 			expectedResonse: responses.Response{
-				MessageType: "ERROR",
+				MessageType: errorcodes.BODY_VALIDATION_ERROR,
 				Message:     "Title field must have more than 3 characters",
 				Data:        nil,
 			},
@@ -382,7 +383,7 @@ func Test_EditGame(t *testing.T) {
 			expectedCode: http.StatusBadRequest,
 			reqBody:      map[string]interface{}{},
 			expectedResonse: responses.Response{
-				MessageType: "ERROR",
+				MessageType: errorcodes.BODY_VALIDATION_ERROR,
 				Message:     "All fields are required",
 				Data:        nil,
 			},
@@ -394,7 +395,7 @@ func Test_EditGame(t *testing.T) {
 			gameID:       strconv.Itoa(gameID),
 			expectedCode: http.StatusBadRequest,
 			expectedResonse: responses.Response{
-				MessageType: "ERROR",
+				MessageType: errorcodes.BODY_TYPES_ERROR,
 				Message:     "Not valid body information",
 				Data:        nil,
 			},
@@ -410,7 +411,7 @@ func Test_EditGame(t *testing.T) {
 			userID:       userID,
 			expectedCode: http.StatusBadRequest,
 			expectedResonse: responses.Response{
-				MessageType: "ERROR",
+				MessageType: errorcodes.BODY_VALIDATION_ERROR,
 				Message:     "Title field must have more than 3 characters",
 				Data:        nil,
 			},
@@ -534,7 +535,7 @@ func Test_DeletGame(t *testing.T) {
 			isAuthor:     false,
 			expectedCode: http.StatusNotFound,
 			expectedResonse: responses.Response{
-				MessageType: "ERROR",
+				MessageType: errorcodes.NOT_FOUND_OR_UNAUTHORIZED,
 				Message:     fmt.Sprintf("Game %d not found", foundID),
 				Data:        nil,
 			},

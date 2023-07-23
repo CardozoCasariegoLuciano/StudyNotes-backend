@@ -9,6 +9,7 @@ import (
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/handlers/authHandlers"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/handlers/responses"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/environment"
+	errorcodes "github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/errorCodes"
 	testtools "github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/testTools"
 	mock_models "github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/testTools/mocks"
 	dbmodels "github.com/CardozoCasariegoLuciano/StudyNotes-backend/models/dbModels"
@@ -62,7 +63,7 @@ func TestRegister_badCases(t *testing.T) {
 			},
 			expectedCode: http.StatusBadRequest,
 			expectedResonse: responses.Response{
-				MessageType: "ERROR",
+				MessageType: errorcodes.BODY_TYPES_ERROR,
 				Message:     "Not valid body information",
 				Data:        nil,
 			},
@@ -76,7 +77,7 @@ func TestRegister_badCases(t *testing.T) {
 			},
 			expectedCode: http.StatusBadRequest,
 			expectedResonse: responses.Response{
-				MessageType: "ERROR",
+				MessageType: errorcodes.BODY_VALIDATION_ERROR,
 				Message:     "All fields are required",
 				Data:        nil,
 			},
@@ -92,7 +93,7 @@ func TestRegister_badCases(t *testing.T) {
 			},
 			expectedCode: http.StatusBadRequest,
 			expectedResonse: responses.Response{
-				MessageType: "ERROR",
+				MessageType: errorcodes.BODY_VALIDATION_ERROR,
 				Message:     "email field must be a valid email",
 				Data:        nil,
 			},
@@ -108,7 +109,7 @@ func TestRegister_badCases(t *testing.T) {
 			},
 			expectedCode: http.StatusBadRequest,
 			expectedResonse: responses.Response{
-				MessageType: "ERROR",
+				MessageType: errorcodes.DATA_NO_MATCH,
 				Message:     "Passwords are not equals",
 				Data:        nil,
 			},
@@ -124,7 +125,7 @@ func TestRegister_badCases(t *testing.T) {
 			},
 			expectedCode: http.StatusBadRequest,
 			expectedResonse: responses.Response{
-				MessageType: "ERROR",
+				MessageType: errorcodes.MAIL_TAKEN,
 				Message:     "Email already taken",
 				Data:        nil,
 			},
@@ -277,7 +278,7 @@ func TestLogin_badCases(t *testing.T) {
 			},
 			expectedCode: http.StatusBadRequest,
 			expectedResonse: responses.Response{
-				MessageType: "ERROR",
+				MessageType: errorcodes.BODY_TYPES_ERROR,
 				Message:     "Not valid body information",
 				Data:        nil,
 			},
@@ -290,7 +291,7 @@ func TestLogin_badCases(t *testing.T) {
 			},
 			expectedCode: http.StatusBadRequest,
 			expectedResonse: responses.Response{
-				MessageType: "ERROR",
+				MessageType: errorcodes.BODY_VALIDATION_ERROR,
 				Message:     "All fields are required",
 				Data:        nil,
 			},
@@ -304,7 +305,7 @@ func TestLogin_badCases(t *testing.T) {
 			},
 			expectedCode: http.StatusBadRequest,
 			expectedResonse: responses.Response{
-				MessageType: "ERROR",
+				MessageType: errorcodes.BODY_VALIDATION_ERROR,
 				Message:     "email field must be a valid email",
 				Data:        nil,
 			},
@@ -318,7 +319,7 @@ func TestLogin_badCases(t *testing.T) {
 			},
 			expectedCode: http.StatusBadRequest,
 			expectedResonse: responses.Response{
-				MessageType: "ERROR",
+				MessageType: errorcodes.WRONG_LOGIN_DATA,
 				Message:     "Wrong email or password",
 				Data:        nil,
 			},
@@ -332,7 +333,7 @@ func TestLogin_badCases(t *testing.T) {
 			},
 			expectedCode: http.StatusBadRequest,
 			expectedResonse: responses.Response{
-				MessageType: "ERROR",
+				MessageType: errorcodes.WRONG_LOGIN_DATA,
 				Message:     "Wrong email or password",
 				Data:        nil,
 			},

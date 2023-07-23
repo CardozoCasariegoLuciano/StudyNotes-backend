@@ -9,6 +9,7 @@ import (
 
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/handlers/responses"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/environment"
+	errorcodes "github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/errorCodes"
 	testtools "github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/testTools"
 	mock_models "github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/testTools/mocks"
 	dbmodels "github.com/CardozoCasariegoLuciano/StudyNotes-backend/models/dbModels"
@@ -48,7 +49,7 @@ func Test_GetByID_Middleware_badCases(t *testing.T) {
 			userID:       1,
 			expectedCode: http.StatusBadRequest,
 			expectedResonse: responses.Response{
-				MessageType: "ERROR",
+				MessageType: errorcodes.INVALID_ID,
 				Message:     "Invalid ID, Must be a number",
 				Data:        nil,
 			},
@@ -59,7 +60,7 @@ func Test_GetByID_Middleware_badCases(t *testing.T) {
 			userID:       notOwnerID,
 			expectedCode: http.StatusNotFound,
 			expectedResonse: responses.Response{
-				MessageType: "ERROR",
+				MessageType: errorcodes.NOT_FOUND_OR_UNAUTHORIZED,
 				Message:     fmt.Sprintf("Game %d not found", notFoundID),
 				Data:        nil,
 			},
@@ -191,7 +192,7 @@ func Test_GetByID_Middleware_goodCases(t *testing.T) {
 
 				assert.Equal(t, http.StatusNotFound, writer.Code)
 				assert.Equal(t, nil, resp.Data)
-				assert.Equal(t, "ERROR", resp.MessageType)
+				assert.Equal(t, errorcodes.NOT_FOUND_OR_UNAUTHORIZED, resp.MessageType)
 				assert.Equal(t, fmt.Sprintf("Game %d not found", foundID), resp.Message)
 			}
 		})
