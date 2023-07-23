@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/handlers/responses"
+	errorcodes "github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/errorCodes"
 	apimodels "github.com/CardozoCasariegoLuciano/StudyNotes-backend/models/apiModels"
 	dbmodels "github.com/CardozoCasariegoLuciano/StudyNotes-backend/models/dbModels"
 	"github.com/labstack/echo/v4"
@@ -36,7 +37,7 @@ func (user *User) GetUser(c echo.Context) error {
 	row := user.storage.GetUserByID(userID, userDB)
 	if row.RowsAffected == 0 {
 		response := responses.NewResponse(
-			"ERROR",
+			errorcodes.NOT_FOUND,
 			fmt.Sprintf("User %d not found", userID),
 			nil,
 		)
@@ -74,7 +75,7 @@ func (user *User) EditUser(c echo.Context) error {
 	row := user.storage.GetUserByID(userID, userDB)
 	if row.RowsAffected == 0 {
 		response := responses.NewResponse(
-			"ERROR",
+			errorcodes.NOT_FOUND,
 			fmt.Sprintf("User %d not found", userID),
 			nil,
 		)
@@ -83,7 +84,7 @@ func (user *User) EditUser(c echo.Context) error {
 
 	if err := c.Bind(reqData); err != nil {
 		response := responses.NewResponse(
-			"ERROR",
+			errorcodes.BODY_TYPES_ERROR,
 			"Not valid body information",
 			nil,
 		)
@@ -93,14 +94,14 @@ func (user *User) EditUser(c echo.Context) error {
 	if err := c.Validate(reqData); err != nil {
 		if strings.Contains(err.Error(), "'max' tag") {
 			response := responses.NewResponse(
-				"ERROR",
+				errorcodes.BODY_VALIDATION_ERROR,
 				"Name field must have less than 30 characters",
 				nil,
 			)
 			return c.JSON(http.StatusBadRequest, response)
 		} else {
 			response := responses.NewResponse(
-				"ERROR",
+				errorcodes.BODY_VALIDATION_ERROR,
 				"There are required fields",
 				nil,
 			)

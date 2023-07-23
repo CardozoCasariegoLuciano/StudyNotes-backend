@@ -9,6 +9,7 @@ import (
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/handlers/responses"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/customValidators"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/environment"
+	errorcodes "github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/errorCodes"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/roles"
 	apimodels "github.com/CardozoCasariegoLuciano/StudyNotes-backend/models/apiModels"
 	"github.com/golang-jwt/jwt"
@@ -51,7 +52,7 @@ func TestIsAdminMiddleware_good(t *testing.T) {
 			expectedCode: http.StatusUnauthorized,
 			isBadCase:    true,
 			expectedResonseData: responses.Response{
-				MessageType: "ERROR",
+				MessageType: errorcodes.NO_ROLE,
 				Message:     "Don´t have the role",
 				Data:        nil,
 			},

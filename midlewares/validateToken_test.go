@@ -9,6 +9,7 @@ import (
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/handlers/responses"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/customValidators"
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/environment"
+	errorcodes "github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/errorCodes"
 	apimodels "github.com/CardozoCasariegoLuciano/StudyNotes-backend/models/apiModels"
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
@@ -30,7 +31,7 @@ func TestValidateTokenMiddleware_bad(t *testing.T) {
 			token:        "",
 			expectedCode: http.StatusUnauthorized,
 			expectedResonse: responses.Response{
-				MessageType: "ERROR",
+				MessageType: errorcodes.NO_TOKEN,
 				Message:     "Dont have a token",
 				Data:        nil,
 			},
@@ -41,7 +42,7 @@ func TestValidateTokenMiddleware_bad(t *testing.T) {
 			token:        "asd123asd",
 			expectedCode: http.StatusUnauthorized,
 			expectedResonse: responses.Response{
-				MessageType: "ERROR",
+				MessageType: errorcodes.WRONG_TOKEN,
 				Message:     "Wrong token",
 				Data:        nil,
 			},
@@ -118,7 +119,7 @@ func TestValidateTokenMiddleware_good(t *testing.T) {
 			token:        ValidToken,
 			expectedCode: http.StatusOK,
 			expectedResonse: responses.Response{
-				MessageType: "ERROR",
+				MessageType: errorcodes.WRONG_TOKEN,
 				Message:     "Wrong token",
 				Data:        nil,
 			},

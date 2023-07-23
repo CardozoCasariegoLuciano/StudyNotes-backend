@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/CardozoCasariegoLuciano/StudyNotes-backend/handlers/responses"
+	errorcodes "github.com/CardozoCasariegoLuciano/StudyNotes-backend/helpers/errorCodes"
 	apimodels "github.com/CardozoCasariegoLuciano/StudyNotes-backend/models/apiModels"
 	dbmodels "github.com/CardozoCasariegoLuciano/StudyNotes-backend/models/dbModels"
 	"github.com/labstack/echo/v4"
@@ -70,16 +71,16 @@ func (game *Game) CreateGame(c echo.Context) error {
 	gameData := apimodels.CreateGameData{}
 
 	if err := c.Bind(&gameData); err != nil {
-		response := responses.NewResponse("ERROR", "Not valid body information", nil)
+		response := responses.NewResponse(errorcodes.BODY_TYPES_ERROR, "Not valid body information", nil)
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
 	if err := c.Validate(&gameData); err != nil {
 		if strings.Contains(err.Error(), "'min' tag") {
-			response := responses.NewResponse("ERROR", "Title field must have more than 3 characters", nil)
+			response := responses.NewResponse(errorcodes.BODY_VALIDATION_ERROR, "Title field must have more than 3 characters", nil)
 			return c.JSON(http.StatusBadRequest, response)
 		} else {
-			response := responses.NewResponse("ERROR", "All fields are required", nil)
+			response := responses.NewResponse(errorcodes.BODY_VALIDATION_ERROR, "All fields are required", nil)
 			return c.JSON(http.StatusBadRequest, response)
 		}
 	}
@@ -114,16 +115,16 @@ func (game *Game) EditGame(c echo.Context) error {
 	reqData := &apimodels.CreateGameData{}
 
 	if err := c.Bind(reqData); err != nil {
-		response := responses.NewResponse("ERROR", "Not valid body information", nil)
+		response := responses.NewResponse(errorcodes.BODY_TYPES_ERROR, "Not valid body information", nil)
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
 	if err := c.Validate(reqData); err != nil {
 		if strings.Contains(err.Error(), "'min' tag") {
-			response := responses.NewResponse("ERROR", "Title field must have more than 3 characters", nil)
+			response := responses.NewResponse(errorcodes.BODY_VALIDATION_ERROR, "Title field must have more than 3 characters", nil)
 			return c.JSON(http.StatusBadRequest, response)
 		} else {
-			response := responses.NewResponse("ERROR", "All fields are required", nil)
+			response := responses.NewResponse(errorcodes.BODY_VALIDATION_ERROR, "All fields are required", nil)
 			return c.JSON(http.StatusBadRequest, response)
 		}
 	}
