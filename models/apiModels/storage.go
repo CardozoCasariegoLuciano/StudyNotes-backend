@@ -21,4 +21,6 @@ type Istorage interface {
 	DeleteByID(id int, model interface{}) *gorm.DB
 	FindUserByEmail(email string, model *dbmodels.User) *gorm.DB
 	ComparePasswords(hashedPass string, bodyPass string) error
+	GetAllGames(userID int, model interface{}) *gorm.DB
+	GetGameById(userID int, id int, model interface{}) *gorm.DB
 }

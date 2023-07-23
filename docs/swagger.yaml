@@ -51,6 +51,8 @@ definitions:
         type: string
       updated_at:
         type: string
+      user_id:
+        type: integer
     type: object
   responses.Response:
     properties:
@@ -158,7 +160,12 @@ paths:
     get:
       consumes:
       - application/json
-      description: List all games (no token required)
+      description: List all user games
+      parameters:
+      - description: Token to validate user
+        in: header
+        name: Authorization
+        type: string
       produces:
       - application/json
       responses:
@@ -182,13 +189,13 @@ paths:
                 data:
                   type: object
               type: object
-      summary: Get all games
+      summary: Get all user games
       tags:
       - Games
     post:
       consumes:
       - application/json
-      description: Create new game for ADMIN or SUPER-ADMIN users
+      description: Create new game
       parameters:
       - description: request body
         in: body
@@ -228,7 +235,7 @@ paths:
     delete:
       consumes:
       - application/json
-      description: Delete game for ADMIN or SUPER-ADMIN
+      description: Delete game
       parameters:
       - description: ID to find the game
         in: path
@@ -304,7 +311,7 @@ paths:
     put:
       consumes:
       - application/json
-      description: Edit game for ADMIN or SUPER-ADMIN
+      description: Edit game
       parameters:
       - description: ID to find the game
         in: path

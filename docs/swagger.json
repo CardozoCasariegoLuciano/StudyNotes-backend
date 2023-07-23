@@ -167,7 +167,7 @@
         },
         "/games/": {
             "get": {
-                "description": "List all games (no token required)",
+                "description": "List all user games",
                 "consumes": [
                     "application/json"
                 ],
@@ -177,7 +177,15 @@
                 "tags": [
                     "Games"
                 ],
-                "summary": "Get all games",
+                "summary": "Get all user games",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Token to validate user",
+                        "name": "Authorization",
+                        "in": "header"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -221,7 +229,7 @@
                 }
             },
             "post": {
-                "description": "Create new game for ADMIN or SUPER-ADMIN users",
+                "description": "Create new game",
                 "consumes": [
                     "application/json"
                 ],
@@ -357,7 +365,7 @@
                 }
             },
             "put": {
-                "description": "Edit game for ADMIN or SUPER-ADMIN",
+                "description": "Edit game",
                 "consumes": [
                     "application/json"
                 ],
@@ -432,7 +440,7 @@
                 }
             },
             "delete": {
-                "description": "Delete game for ADMIN or SUPER-ADMIN",
+                "description": "Delete game",
                 "consumes": [
                     "application/json"
                 ],
@@ -574,6 +582,9 @@
                 },
                 "updated_at": {
                     "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
                 }
             }
         },

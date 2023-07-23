@@ -19,17 +19,19 @@ func NewGame(store apimodels.Istorage) *Game {
 }
 
 // GetGames
-// @Summary Get all games
-// @Description List all games (no token required)
+// @Summary Get all user games
+// @Description List all user games
 // @Tags Games
 // @Accept json
 // @Produce json
+// @Param Authorization header string false "Token to validate user"
 // @Success 200 {object} responses.Response{data=[]dbmodels.Game}
 // @Failure 400 {object} responses.Response{data=object}
 // @Router /games/ [get]
 func (game *Game) GetGames(c echo.Context) error {
+	userID := c.Get("userID").(int)
 	AllGames := &dbmodels.Games{}
-	game.storage.GetAll(AllGames)
+	game.storage.GetAllGames(userID, AllGames)
 
 	response := responses.NewResponse("OK", "All games", AllGames)
 	return c.JSON(http.StatusOK, response)
@@ -54,7 +56,7 @@ func (game *Game) GetGameByID(c echo.Context) error {
 
 // CreateGame
 // @Summary Create new game
-// @Description Create new game for ADMIN or SUPER-ADMIN users
+// @Description Create new game
 // @Tags Games
 // @Accept json
 // @Produce json
@@ -64,6 +66,7 @@ func (game *Game) GetGameByID(c echo.Context) error {
 // @Failure 400 {object} responses.Response{data=object}
 // @Router /games/ [post]
 func (game *Game) CreateGame(c echo.Context) error {
+	userID := c.Get("userID").(int)
 	gameData := apimodels.CreateGameData{}
 
 	if err := c.Bind(&gameData); err != nil {
@@ -84,6 +87,7 @@ func (game *Game) CreateGame(c echo.Context) error {
 	newGame := &dbmodels.Game{
 		Title:       gameData.Title,
 		Description: gameData.Description,
+		UserID:      userID,
 	}
 
 	game.storage.Save(newGame)
@@ -94,7 +98,7 @@ func (game *Game) CreateGame(c echo.Context) error {
 
 // EditGame
 // @Summary Edit game
-// @Description Edit game for ADMIN or SUPER-ADMIN
+// @Description Edit game
 // @Tags Games
 // @Accept json
 // @Produce json
@@ -135,7 +139,7 @@ func (game *Game) EditGame(c echo.Context) error {
 
 // DeleteGame
 // @Summary Delete game
-// @Description Delete game for ADMIN or SUPER-ADMIN
+// @Description Delete game
 // @Tags Games
 // @Accept json
 // @Produce json
@@ -146,6 +150,7 @@ func (game *Game) EditGame(c echo.Context) error {
 // @Router /games/{gameID} [DELETE]
 func (game *Game) DeleteGame(c echo.Context) error {
 	contextGame := c.Get("Game").(*dbmodels.Game)
+
 	game.storage.DeleteByID(int(contextGame.ID), contextGame)
 
 	response := responses.NewResponse("OK", "Game Deleted", contextGame)
