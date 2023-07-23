@@ -11,6 +11,16 @@ definitions:
     - description
     - title
     type: object
+  apimodels.EditUserData:
+    properties:
+      image:
+        type: string
+      name:
+        maxLength: 30
+        type: string
+    required:
+    - name
+    type: object
   apimodels.Login:
     properties:
       email:
@@ -36,6 +46,19 @@ definitions:
     - email
     - name
     - password
+    type: object
+  apimodels.User:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      image:
+        type: string
+      name:
+        type: string
+      role:
+        type: string
     type: object
   dbmodels.Game:
     properties:
@@ -352,4 +375,81 @@ paths:
       summary: Edit game
       tags:
       - Games
+  /user/:
+    get:
+      consumes:
+      - application/json
+      description: Get user using the token in the header
+      parameters:
+      - description: Token to validate user
+        in: header
+        name: Authorization
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/apimodels.User'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      summary: Get user
+      tags:
+      - User
+    put:
+      consumes:
+      - application/json
+      description: Edit the user using the token in header
+      parameters:
+      - description: Token to validate user
+        in: header
+        name: Authorization
+        type: string
+      - description: request body
+        in: body
+        name: UserData
+        required: true
+        schema:
+          $ref: '#/definitions/apimodels.EditUserData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/apimodels.User'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+      summary: Edit user
+      tags:
+      - User
 swagger: "2.0"

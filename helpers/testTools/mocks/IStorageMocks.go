@@ -133,6 +133,20 @@ func (mr *MockIstorageMockRecorder) GetGameById(userID, id, model interface{}) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetGameById", reflect.TypeOf((*MockIstorage)(nil).GetGameById), userID, id, model)
 }
 
+// GetUserByID mocks base method.
+func (m *MockIstorage) GetUserByID(id int, model *dbmodels.User) *gorm.DB {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUserByID", id, model)
+	ret0, _ := ret[0].(*gorm.DB)
+	return ret0
+}
+
+// GetUserByID indicates an expected call of GetUserByID.
+func (mr *MockIstorageMockRecorder) GetUserByID(id, model interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserByID", reflect.TypeOf((*MockIstorage)(nil).GetUserByID), id, model)
+}
+
 // Save mocks base method.
 func (m *MockIstorage) Save(anyModel interface{}) *gorm.DB {
 	m.ctrl.T.Helper()

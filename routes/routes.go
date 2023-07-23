@@ -16,4 +16,8 @@ func HanddlerRoutes(e *echo.Echo) {
 	//Games
 	gamesRoutes := e.Group(basePath + "/games")
 	GamesRoutes(gamesRoutes, st)
+
+	//User
+	userRoutes := e.Group(basePath + "/user")
+	UserRoutes(userRoutes, st)
 }
