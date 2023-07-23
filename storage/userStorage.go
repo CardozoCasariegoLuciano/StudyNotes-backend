@@ -19,3 +19,10 @@ func (st *Storage) FindUserByEmail(email string, model *dbmodels.User) *gorm.DB 
 func (st *Storage) ComparePasswords(hashedPass string, bodyPass string) error {
 	return bcrypt.CompareHashAndPassword([]byte(hashedPass), []byte(bodyPass))
 }
+
+func (st *Storage) GetUserByID(userID int, model *dbmodels.User) *gorm.DB {
+	return st.db.
+		Select("name, email, image, role, id").
+		Where("id = ?", userID).
+		First(model)
+}
